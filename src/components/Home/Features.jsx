@@ -1,98 +1,113 @@
 export default function Features() {
-    return (
-      <section id="features" className="mx-auto max-w-6xl px-4 py-20">
-        <div className="mx-auto max-w-2xl text-center">
-        <span className="inline-flex rounded-full bg-blue-100 px-6 py-2 text-sm font-semibold uppercase tracking-[0.4em] text-blue-700 shadow-md shadow-blue-200/60">
-  Features
-</span>
-  
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl ">
-            Everything needed to manage<br></br>small-store inventory.
+  return (
+    <section
+      id="features"
+      className="relative overflow-hidden bg-slate-950 px-4 py-24 sm:py-28"
+    >
+      {/* Small glowing particles */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute left-10 top-24 h-2 w-2 rounded-full bg-red-500/50 blur-[1px] animate-drift-right" />
+        <div className="absolute right-12 top-32 h-2.5 w-2.5 rounded-full bg-red-500/40 blur-[1px] animate-drift-left animation-delay-1500" />
+        <div className="absolute left-1/4 bottom-24 h-2 w-2 rounded-full bg-red-400/35 blur-[1px] animate-floating animation-delay-1500" />
+        <div className="absolute right-1/4 bottom-16 h-2 w-2 rounded-full bg-red-400/35 blur-[1px] animate-floating-wide animation-delay-3000" />
+        <div className="absolute left-16 bottom-40 h-1.5 w-1.5 rounded-full bg-red-500/40 blur-[1px] animate-drift-right animation-delay-3000" />
+        <div className="absolute right-20 bottom-28 h-2 w-2 rounded-full bg-red-500/35 blur-[1px] animate-drift-left animation-delay-4500" />
+      </div>
+
+      {/* Large glow moved DOWN behind the feature cards */}
+      <div className="pointer-events-none absolute left-1/2 top-[62%] h-[34rem] w-[34rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-500/10 blur-[140px]" />
+
+      {/* Extra ambient glows */}
+      <div className="pointer-events-none absolute right-0 top-1/3 h-72 w-72 rounded-full bg-white/5 blur-[100px]" />
+      <div className="pointer-events-none absolute bottom-0 left-0 h-72 w-72 rounded-full bg-red-500/10 blur-[110px]" />
+
+      <div className="relative z-10 mx-auto max-w-6xl">
+        <div className="mx-auto max-w-3xl text-center">
+          <span className="inline-flex rounded-full border border-white/10 bg-white/10 px-6 py-2 text-sm font-semibold uppercase tracking-[0.45em] text-slate-200/80 shadow-[0_0_60px_rgba(255,255,255,0.06)] backdrop-blur-md">
+            Features
+          </span>
+
+          <h2 className="mt-6 text-4xl font-bold tracking-tight text-white sm:text-5xl">
+            Everything needed to manage
+            <span className="block bg-gradient-to-r from-white via-slate-200 to-red-300 bg-clip-text text-transparent">
+              small-store inventory.
+            </span>
           </h2>
-  
-          <p className="mt-4 text-lg leading-8 text-slate-600">
+
+          <p className="mt-5 text-lg leading-8 text-slate-400">
             StockPilot helps small businesses track products, record sales,
             monitor stock levels, and understand what needs to be restocked.
           </p>
         </div>
-  
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
-          <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200">
-            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-100 text-xl">
+
+        <div className="mt-16 grid gap-6 md:grid-cols-3">
+          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-7 shadow-xl shadow-black/20 backdrop-blur-md transition hover:-translate-y-1 hover:border-red-400/30 hover:bg-white/[0.07]">
+            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-red-500/10 text-xl shadow-lg shadow-red-500/10">
               📦
             </div>
-            <h3 className="text-xl font-bold text-slate-950">
-              Product Management
-            </h3>
-            <p className="mt-3 leading-7 text-slate-600">
-              Add and organize products with prices, categories, stock quantities,
-              and reorder levels.
+            <h3 className="text-xl font-bold text-white">Product Management</h3>
+            <p className="mt-3 leading-7 text-slate-400">
+              Add and organize products with prices, categories, stock
+              quantities, and reorder levels.
             </p>
           </div>
-  
-          <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200">
-            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-100 text-xl">
+
+          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-7 shadow-xl shadow-black/20 backdrop-blur-md transition hover:-translate-y-1 hover:border-red-400/30 hover:bg-white/[0.07]">
+            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-red-500/10 text-xl shadow-lg shadow-red-500/10">
               🧾
             </div>
-            <h3 className="text-xl font-bold text-slate-950">Sales Tracking</h3>
-            <p className="mt-3 leading-7 text-slate-600">
+            <h3 className="text-xl font-bold text-white">Sales Tracking</h3>
+            <p className="mt-3 leading-7 text-slate-400">
               Record sold items and automatically update inventory levels after
               each sale.
             </p>
           </div>
-  
-          <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200">
-            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-100 text-xl">
+
+          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-7 shadow-xl shadow-black/20 backdrop-blur-md transition hover:-translate-y-1 hover:border-red-400/30 hover:bg-white/[0.07]">
+            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-red-500/10 text-xl shadow-lg shadow-red-500/10">
               ⚠️
             </div>
-            <h3 className="text-xl font-bold text-slate-950">
-              Low-Stock Alerts
-            </h3>
-            <p className="mt-3 leading-7 text-slate-600">
+            <h3 className="text-xl font-bold text-white">Low-Stock Alerts</h3>
+            <p className="mt-3 leading-7 text-slate-400">
               Quickly see products that are running low or out of stock before
               shelves are empty.
             </p>
           </div>
-  
-          <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200">
-            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-100 text-xl">
+
+          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-7 shadow-xl shadow-black/20 backdrop-blur-md transition hover:-translate-y-1 hover:border-red-400/30 hover:bg-white/[0.07]">
+            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-red-500/10 text-xl shadow-lg shadow-red-500/10">
               📊
             </div>
-            <h3 className="text-xl font-bold text-slate-950">
-              Analytics Dashboard
-            </h3>
-            <p className="mt-3 leading-7 text-slate-600">
+            <h3 className="text-xl font-bold text-white">Analytics Dashboard</h3>
+            <p className="mt-3 leading-7 text-slate-400">
               View inventory value, best-selling products, sales totals, and
               low-stock trends.
             </p>
           </div>
-  
-          <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200">
-            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-100 text-xl">
+
+          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-7 shadow-xl shadow-black/20 backdrop-blur-md transition hover:-translate-y-1 hover:border-red-400/30 hover:bg-white/[0.07]">
+            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-red-500/10 text-xl shadow-lg shadow-red-500/10">
               ✨
             </div>
-            <h3 className="text-xl font-bold text-slate-950">
-              AI Restock Assistant
-            </h3>
-            <p className="mt-3 leading-7 text-slate-600">
-              Use AI to suggest which products should be reordered based on stock
-              and sales activity.
+            <h3 className="text-xl font-bold text-white">AI Restock Assistant</h3>
+            <p className="mt-3 leading-7 text-slate-400">
+              Use AI to suggest which products should be reordered based on
+              stock and sales activity.
             </p>
           </div>
-  
-          <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200">
-            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-100 text-xl">
+
+          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-7 shadow-xl shadow-black/20 backdrop-blur-md transition hover:-translate-y-1 hover:border-red-400/30 hover:bg-white/[0.07]">
+            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-red-500/10 text-xl shadow-lg shadow-red-500/10">
               🕘
             </div>
-            <h3 className="text-xl font-bold text-slate-950">
-              Inventory History
-            </h3>
-            <p className="mt-3 leading-7 text-slate-600">
+            <h3 className="text-xl font-bold text-white">Inventory History</h3>
+            <p className="mt-3 leading-7 text-slate-400">
               Keep track of product changes, sales records, and restock activity
               over time.
             </p>
           </div>
         </div>
-      </section>
-    );
-  }
+      </div>
+    </section>
+  );
+}
