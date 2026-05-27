@@ -1,6 +1,6 @@
 export default function Hero() {
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden bg-slate-950 px-8 py-24 sm:px-12 sm:py-28">
+    <section className="relative flex min-h-screen items-center overflow-hidden bg-slate-950 px-8 pt-24 pb-0 sm:px-12 sm:pt-28 sm:pb-0">
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-8 top-20 h-2 w-2 rounded-full bg-red-500/50 blur-[1px] animate-drift-right" />
         <div className="absolute left-16 bottom-24 h-1.5 w-1.5 rounded-full bg-red-500/40 blur-[1px] animate-drift-right animation-delay-3000" />

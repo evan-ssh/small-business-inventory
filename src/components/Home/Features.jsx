@@ -4,7 +4,7 @@ export default function Features() {
       id="features"
       className="relative overflow-hidden bg-slate-950 px-4 py-24 sm:py-28"
     >
-      {/* Small glowing particles */}
+
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-10 top-24 h-2 w-2 rounded-full bg-red-500/50 blur-[1px] animate-drift-right" />
         <div className="absolute right-12 top-32 h-2.5 w-2.5 rounded-full bg-red-500/40 blur-[1px] animate-drift-left animation-delay-1500" />
@@ -14,10 +14,9 @@ export default function Features() {
         <div className="absolute right-20 bottom-28 h-2 w-2 rounded-full bg-red-500/35 blur-[1px] animate-drift-left animation-delay-4500" />
       </div>
 
-      {/* Large glow moved DOWN behind the feature cards */}
+
       <div className="pointer-events-none absolute left-1/2 top-[62%] h-[34rem] w-[34rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-500/10 blur-[140px]" />
 
-      {/* Extra ambient glows */}
       <div className="pointer-events-none absolute right-0 top-1/3 h-72 w-72 rounded-full bg-white/5 blur-[100px]" />
       <div className="pointer-events-none absolute bottom-0 left-0 h-72 w-72 rounded-full bg-red-500/10 blur-[110px]" />
 
