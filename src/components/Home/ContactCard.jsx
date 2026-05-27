@@ -1,6 +1,6 @@
-export default function ContactFooter() {
+export default function ContactCard() {
   return (
-    <footer
+    <section
       id="contact"
       className="relative overflow-hidden bg-slate-950 px-4 py-24 sm:py-28"
     >
@@ -14,7 +14,7 @@ export default function ContactFooter() {
       </div>
 
       <div className="pointer-events-none absolute left-1/2 top-1/2 h-[36rem] w-[36rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-500/10 blur-[150px]" />
-      <div className="pointer-events-none absolute bottom-0 left-0 h-72 w-72 rounded-full bg-red-500/10 blur-[110px]" />
+      <div className="pointer-events-none absolute right-1/3 bottom-0 h-180 w-220 rounded-full bg-red-500/10 blur-[110px]" />
       <div className="pointer-events-none absolute right-0 top-20 h-72 w-72 rounded-full bg-white/5 blur-[100px]" />
 
       <div className="relative z-10 mx-auto max-w-6xl">
@@ -114,19 +114,7 @@ export default function ContactFooter() {
             </div>
           </div>
         </div>
-
-        <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-sm text-slate-500 sm:flex-row">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 font-bold text-white">
-              S
-            </div>
-
-            <span className="font-semibold text-slate-300">StockPilot</span>
-          </div>
-
-          <p>© 2026 StockPilot. Built for smarter inventory planning.</p>
-        </div>
       </div>
-    </footer>
+    </section>
   );
 }
