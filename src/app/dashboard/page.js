@@ -1,3 +1,4 @@
+import InfoCard from '../../components/dashboard/InfoCard';
 export default function Dashboard() {
     return (
         <div className="min-h-screen bg-slate-950 text-white font-sans relative overflow-hidden pt-24 pb-4 px-4 sm:pt-28 sm:pb-8 sm:px-8 lg:pt-32 lg:pb-12 lg:px-12">
@@ -27,37 +28,10 @@ export default function Dashboard() {
   
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-md transition hover:border-red-400/20">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 block">Total Active Units</span>
-              <div className="mt-2 flex items-baseline gap-2">
-                <span className="text-3xl font-bold tracking-tight">842</span>
-                <span className="text-xs text-emerald-400 font-mono">Stable</span>
-              </div>
-            </div>
-  
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-md transition hover:border-red-400/20">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 block">Critical Shortages</span>
-              <div className="mt-2 flex items-baseline gap-2">
-                <span className="text-3xl font-bold tracking-tight text-red-400">3 Items</span>
-                <span className="text-xs text-red-400/70 font-mono">Alert</span>
-              </div>
-            </div>
-  
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-md transition hover:border-red-400/20">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 block">Transactions Processed</span>
-              <div className="mt-2 flex items-baseline gap-2">
-                <span className="text-3xl font-bold tracking-tight">129</span>
-                <span className="text-xs text-slate-500 font-mono">This Month</span>
-              </div>
-            </div>
-  
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-md transition hover:border-red-400/20">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 block">Net Value</span>
-              <div className="mt-2 flex items-baseline gap-2">
-                <span className="text-3xl font-bold tracking-tight">$24,910</span>
-                <span className="text-xs text-slate-500 font-mono">CAD</span>
-              </div>
-            </div>
+            <InfoCard label="Total Active Units" value="842" status="Stable" />
+            <InfoCard label="Critical Shortages" value="3 Items" status="Alert" isAlert={true} />
+            <InfoCard label="Transactions" value="129" status="This Month" />
+            <InfoCard label="Net Value" value="$24,910" status="CAD"></InfoCard>
   
           </div>
 
