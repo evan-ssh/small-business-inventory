@@ -26,9 +26,9 @@ export default function ContactCard() {
               </span>
 
               <h2 className="mt-6 max-w-3xl text-4xl font-bold tracking-tight text-white sm:text-5xl">
-                Ready to simplify your
+                Ready to simplify your inventory workflow?
                 <span className="block bg-gradient-to-r from-white via-slate-200 to-red-300 bg-clip-text text-transparent">
-                  inventory workflow?
+                  
                 </span>
               </h2>
 
