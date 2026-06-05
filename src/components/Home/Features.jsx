@@ -1,3 +1,4 @@
+import Image from 'next/image';
 export default function Features() {
   return (
     <section
@@ -22,15 +23,21 @@ export default function Features() {
 
       <div className="relative z-10 mx-auto max-w-6xl">
         <div className="mx-auto max-w-3xl text-center">
-          <span className="inline-flex rounded-full border border-white/10 bg-white/10 px-6 py-2 text-sm font-semibold uppercase tracking-[0.45em] text-slate-200/80 shadow-[0_0_60px_rgba(255,255,255,0.06)] backdrop-blur-md">
+          <span className="inline-flex rounded-full border border-white/10 bg-white/10 px-6 py-2 text-base font-semibold uppercase tracking-[0.45em] text-slate-200/80 shadow-[0_0_60px_rgba(255,255,255,0.06)] backdrop-blur-md">
             Features
           </span>
+          <div className="mt-8 flex justify-center">
+            <Image 
+              src="/Robot.png" 
+              alt="StockPilot Robo" 
+              width={800} 
+              height={450} 
+              className="rounded-2xl border border-white/10 shadow-2xl"/>
+          </div>
 
           <h2 className="mt-6 text-4xl font-bold tracking-tight text-white sm:text-5xl">
-            Everything needed to manage
-            <span className="block bg-gradient-to-r from-white via-slate-200 to-red-300 bg-clip-text text-transparent">
-              small-store inventory.
-            </span>
+            Everything needed to manage <br></br>small-store inventory
+            
           </h2>
 
           <p className="mt-5 text-lg leading-8 text-slate-400">
