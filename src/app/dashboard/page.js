@@ -1,5 +1,22 @@
-import InfoCard from '../../components/dashboard/InfoCard';
+"use client";
+import {useState, useEffect} from "react";
+import InfoCard from "../../components/dashboard/InfoCard";
+import InventoryTable from "../../components/dashboard/InventoryTable";
+
 export default function Dashboard() {
+    const [products, setProducts] = useState([]);
+
+    const fetchProducts = async () => {
+        fetch('/api/products')
+        .then((response) => response.json())
+        .then((data) => setProducts(data))
+        .catch((err) => console.error("Failed to fetch products:", err));
+    }
+    useEffect(() => {
+        fetchProducts();
+    }, []);
+ 
+
     return (
         <div className="min-h-screen bg-slate-950 text-white font-sans relative overflow-hidden pt-24 pb-4 px-4 sm:pt-28 sm:pb-8 sm:px-8 lg:pt-32 lg:pb-12 lg:px-12">
         
@@ -40,9 +57,12 @@ export default function Dashboard() {
             <div className="p-6 border-b border-white/10 bg-white/[0.01] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
                 <h2 className="text-base font-bold text-white">Stock</h2>
-                <p className="text-xs text-slate-400 mt-0.5">.</p>
+    
               </div>
               <div className="relative">
+              <button onClick={fetchProducts}className="rounded-xl bg-slate-800 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow transition hover:bg-slate-700">
+                Refresh table
+                </button>
                 <input 
                   type="text" 
                   placeholder="Search Inventory..." 
@@ -52,76 +72,10 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="border-b border-white/10 bg-white/[0.02] text-xs font-semibold uppercase tracking-wider text-slate-400">
-                    <th className="p-4 pl-6">Description</th>
-                    <th className="p-4">SKU Code</th>
-                    <th className="p-4">Product Type</th>
-                    <th className="p-4">Qty</th>
-                    <th className="p-4 pr-6 text-right">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/5 text-sm">
-                  
-                  <tr className="hover:bg-white/[0.01] transition-colors">
-                    <td className="p-4 pl-6 font-medium text-white">Electronics Chassis</td>
-                    <td className="p-4 font-mono text-xs text-slate-400">SKU-9082-XL</td>
-                    <td className="p-4 text-slate-300">Hardware Components</td>
-                    <td className="p-4 font-semibold text-slate-200">412 Units</td>
-                    <td className="p-4 pr-6 text-right">
-                      <span className="inline-block rounded-md border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-400">
-                        Optimal
-                      </span>
-                    </td>
-                  </tr>
-  
-                  <tr className="hover:bg-white/[0.01] transition-colors">
-                    <td className="p-4 pl-6 font-medium text-white">High-Capacity Storage Drive</td>
-                    <td className="p-4 font-mono text-xs text-slate-400">SKU-1104-MD</td>
-                    <td className="p-4 text-slate-300">Storage</td>
-                    <td className="p-4 font-semibold text-slate-200">14 Units</td>
-                    <td className="p-4 pr-6 text-right">
-                      <span className="inline-block rounded-md border border-amber-500/20 bg-amber-500/10 px-2.5 py-0.5 text-xs font-medium text-amber-400">
-                        Low Stock
-                      </span>
-                    </td>
-                  </tr>
-  
-                  <tr className="hover:bg-white/[0.01] transition-colors">
-                    <td className="p-4 pl-6 font-medium text-white">Processing Core</td>
-                    <td className="p-4 font-mono text-xs text-slate-400">SKU-4485-CR</td>
-                    <td className="p-4 text-slate-300">Processing</td>
-                    <td className="p-4 font-semibold text-slate-400">0 Units</td>
-                    <td className="p-4 pr-6 text-right">
-                      <span className="inline-block rounded-md border border-red-500/20 bg-red-500/10 px-2.5 py-0.5 text-xs font-medium text-red-400">
-                        Depleted
-                      </span>
-                    </td>
-                  </tr>
-  
-                  <tr className="hover:bg-white/[0.01] transition-colors">
-                    <td className="p-4 pl-6 font-medium text-white">Router</td>
-                    <td className="p-4 font-mono text-xs text-slate-400">SKU-7731-HG</td>
-                    <td className="p-4 text-slate-300">Networking</td>
-                    <td className="p-4 font-semibold text-slate-200">89 Units</td>
-                    <td className="p-4 pr-6 text-right">
-                      <span className="inline-block rounded-md border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-400">
-                        Optimal
-                      </span>
-                    </td>
-                  </tr>
-  
-                </tbody>
-              </table>
+            <InventoryTable products={products}></InventoryTable>
+              
             </div>
           </div>
-  
-     
-
-  
         </div>
-      </div>
     );
   }
