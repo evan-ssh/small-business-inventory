@@ -11,7 +11,7 @@ export default function Features() {
         <div className="absolute right-12 top-32 h-2.5 w-2.5 rounded-full bg-red-500/40 blur-[1px] animate-drift-left animation-delay-1500" />
         <div className="absolute left-1/4 bottom-24 h-2 w-2 rounded-full bg-red-400/35 blur-[1px] animate-floating animation-delay-1500" />
         <div className="absolute right-1/4 bottom-16 h-2 w-2 rounded-full bg-red-400/35 blur-[1px] animate-floating-wide animation-delay-3000" />
-        <div className="absolute left-16 bottom-40 h-1.5 w-1.5 rounded-full bg-red-500/40 blur-[1px] animate-drift-right animation-delay-3000" />
+        <div className="absolute left-13 bottom-40 h-1.5 w-1.5 rounded-full bg-red-500/40 blur-[1px] animate-drift-right animation-delay-3000" />
         <div className="absolute right-20 bottom-28 h-2 w-2 rounded-full bg-red-500/35 blur-[1px] animate-drift-left animation-delay-4500" />
       </div>
 
@@ -19,13 +19,18 @@ export default function Features() {
       <div className="pointer-events-none absolute left-1/2 top-[62%] h-[34rem] w-[34rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-500/10 blur-[140px]" />
 
       <div className="pointer-events-none absolute right-0 top-1/3 h-72 w-72 rounded-full bg-white/5 blur-[100px]" />
-      <div className="pointer-events-none absolute bottom-0 left-0 h-72 w-72 rounded-full bg-red-500/10 blur-[110px]" />
+      <div className="pointer-events-none absolute bottom-0 left-0 h-2 w-72 rounded-full bg-red-500/10 blur-[110px]" />
 
-      <div className="relative z-10 mx-auto max-w-6xl">
-        <div className="mx-auto max-w-3xl text-center">
-          <span className="inline-flex rounded-full border border-white/10 bg-white/10 px-6 py-2 text-base font-semibold uppercase tracking-[0.45em] text-slate-200/80 shadow-[0_0_60px_rgba(255,255,255,0.06)] backdrop-blur-md">
+      <div className="relative z-10 mx-auto max-w-2xl">
+        <div className="mx-auto max-w-6xl text-center">
+          <span className="inline-flex rounded-full border border-white/10 bg-white/10 px-20 py-3 text-lg font-semibold uppercase tracking-[0.45em] text-slate-200/80 shadow-[0_0_60px_rgba(255,255,255,0.06)] backdrop-blur-md">
             Features
           </span>
+          
+
+          <h2 className="mt-6 text-3xl font-bold tracking-tight text-white sm:text-5xl">
+            Everything needed to manage <br></br>small-store inventory
+          </h2>
           <div className="mt-8 flex justify-center">
             <Image 
               src="/Robot.png" 
@@ -34,11 +39,6 @@ export default function Features() {
               height={450} 
               className="rounded-2xl border border-white/10 shadow-2xl"/>
           </div>
-
-          <h2 className="mt-6 text-4xl font-bold tracking-tight text-white sm:text-5xl">
-            Everything needed to manage <br></br>small-store inventory
-            
-          </h2>
 
           <p className="mt-5 text-lg leading-8 text-slate-400">
             StockPilot helps small businesses track products, record sales,

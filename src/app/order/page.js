@@ -2,11 +2,13 @@
 import {useState, useEffect} from "react";
 import InfoCard from "../../components/dashboard/InfoCard";
 import InventoryTable from "../../components/dashboard/InventoryTable";
-import { useRouter } from 'next/navigation';
 
-export default function Dashboard() {
+
+
+export default function Order() {
     const [products, setProducts] = useState([]);
-    const router = useRouter();
+
+
     const fetchProducts = async () => {
         fetch('/api/products')
         .then((response) => response.json())
@@ -37,33 +39,20 @@ export default function Dashboard() {
               </h1>
              
             </div>
-            <div className="flex items-center gap-3">
-              <button className="rounded-xl bg-white px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-slate-950 shadow transition hover:bg-slate-200">
-                + New Asset
-              </button>
-            </div>
-          </div>
-  
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             
-            <InfoCard label="Total Active Units" value="842" status="Stable" />
-            <InfoCard label="Critical Shortages" value="3 Items" status="Alert" isAlert={true} />
-            <InfoCard label="Transactions" value="129" status="This Month" />
-            <InfoCard label="Net Value" value="$24,910" status="CAD"></InfoCard>
-  
           </div>
+  
+       
 
           <div className="rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-md shadow-2xl overflow-hidden">
             
             <div className="p-6 border-b border-white/10 bg-white/[0.01] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
                 <h2 className="text-base font-bold text-white">Stock</h2>
-    
+
               </div>
-              <div className="relative">
-              <button 
-                onClick={() => router.push('/order')} className="rounded-xl bg-red-600 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow transition hover:bg-red-500">+ Place Order
-              </button> 
+              <div className="relative gap-2">
+             
               <button onClick={fetchProducts}className="rounded-xl bg-slate-800 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow transition hover:bg-slate-700">
                 Refresh table
                 </button>
