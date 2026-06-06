@@ -8,13 +8,20 @@ import InventoryTable from "../../components/dashboard/InventoryTable";
 export default function Order() {
     const [products, setProducts] = useState([]);
 
-
     const fetchProducts = async () => {
-        fetch('/api/products')
-        .then((response) => response.json())
-        .then((data) => setProducts(data))
-        .catch((err) => console.error("Failed to fetch products:", err));
-    }
+        try{
+            const response = await fetch('/api/products');
+            
+            if (!response.ok) {
+              throw new Error(`Error Loading Products: ${response.status}`);
+            }
+        
+            const data = await response.json();
+            setProducts(data);
+          } catch (e) {
+            console.log("Failed to fetch products:", e);
+        }
+        };
     useEffect(() => {
         fetchProducts();
     }, []);
@@ -35,7 +42,7 @@ export default function Order() {
             <div>
               
               <h1 className="mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-                Inventory
+                Order
               </h1>
              
             </div>

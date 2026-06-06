@@ -1,6 +1,13 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
+  const currPath = usePathname();
+  
+  const isPath = (navPath) => currPath === navPath;
+
     return (
       <nav className="fixed left-0 top-0 z-50 w-full border-b border-white/10 bg-slate-950/80 px-8 py-4 backdrop-blur-md sm:px-10 lg:px-12">
         <div className="flex w-full items-center justify-between">
@@ -17,23 +24,23 @@ export default function Navbar() {
           <div className="hidden items-center gap-8 md:flex">
             <Link href="/" className="group relative pb-1 text-sm font-medium text-slate-300 transition hover:text-white">
               Home
-              <span className="absolute bottom-0 left-0 h-0.5 w-full scale-x-100 rounded-full bg-red-500 transition-transform" />
+              <span className={`absolute bottom-0 left-0 h-0.5 w-full rounded-full bg-red-500 transition-transform ${isPath('/') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`} />
             </Link>
 
             <Link href="/dashboard" className="group relative pb-1 text-sm font-medium text-slate-300 transition hover:text-white">
               Dashboard
-              <span className="absolute bottom-0 left-0 h-0.5 w-full scale-x-0 rounded-full bg-red-500 transition-transform group-hover:scale-x-100" />
+              <span className={`absolute bottom-0 left-0 h-0.5 w-full rounded-full bg-red-500 transition-transform ${isPath('/dashboard') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`} />
             </Link>
   
             <Link href="/contact" className="group relative pb-1 text-sm font-medium text-slate-300 transition hover:text-white">
               Contact
-              <span className="absolute bottom-0 left-0 h-0.5 w-full scale-x-0 rounded-full bg-red-500 transition-transform group-hover:scale-x-100" />
+              <span className={`absolute bottom-0 left-0 h-0.5 w-full rounded-full bg-red-500 transition-transform ${isPath('/contact') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`} />
             </Link>
   
             <Link href="/login" className="rounded-full border border-white/10 bg-white/10 px-5 py-2 text-sm font-semibold text-white transition hover:bg-white hover:text-slate-950">
               Login
             </Link>
-          </div>
+            </div>
         </div>
       </nav>
     );
