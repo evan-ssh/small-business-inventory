@@ -15,7 +15,7 @@ function getStatusFromQty(qty) {
   return "Optimal";
 }
 
-export default function AddItemMenu({ onClose }) {
+export default function AddItemMenu({ onClose, onAdd }) {
   const [formData, setFormData] = useState({
     description: "",
     sku: "",
@@ -23,7 +23,7 @@ export default function AddItemMenu({ onClose }) {
     qty: "0",
     price: "0",
   });
-
+  
   const [errMsg, setErr] = useState("");
 
   const qtyNumber = Number(formData.qty || 0);
@@ -40,14 +40,12 @@ export default function AddItemMenu({ onClose }) {
     setErr("");
   }
 
-  function handleSave(e) {
+  async function handleSave(e) {
     e.preventDefault();
-
     if (!formData.description.trim()) {
       setErr("Product description is required.");
       return;
     }
-
     const newProduct = {
       description: formData.description.trim(),
       sku: formData.sku.trim(),
@@ -55,14 +53,30 @@ export default function AddItemMenu({ onClose }) {
       qty: Number(formData.qty || 0),
       price: Number(formData.price || 0),
       status: calculatedStatus,
-      transactionsThisMonth: 0,
+      transactionsThisMonth: 0};
+      
+   try{
+    const response = await fetch("/api/products", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(newProduct),
+     });
+     if (!response.ok) {
+      throw new Error("Failed to create product.");
+    }
 
-    };
-
-    console.log("Frontend create only for now:", newProduct);
-
+    await onAdd();
     onClose();
+  } catch (err) {
+    setErr("Failed to create product.");
+    console.log(err);
   }
+}
+
+      
+   
+   
+    
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 px-4 backdrop-blur-sm">

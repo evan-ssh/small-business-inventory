@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getDB } from '@/lib/mongodb';
 
 
-const collectionName = "products"
+const collectionName = "products";
 
 
 export async function GET(){
@@ -28,3 +28,29 @@ export async function GET(){
       {status:500}
     );
   }}
+
+  export async function POST(request){
+    
+  try{
+    const db = await getDB();
+    const product = await request.json();
+    await db.collection(collectionName).insertOne({
+      description: product.description,
+      sku: product.sku,
+      type: product.type,
+      qty: Number(product.qty),
+      price: Number(product.price),
+      status: product.status,
+      transactionsThisMonth: Number(product.transactionsThisMonth ?? 0),
+    });
+    return NextResponse.json({message: "Product created"})
+      
+    
+  }catch(err){
+    console.log(err)
+    return NextResponse.json(
+      { error: "Failed to create product" },
+      { status: 500 }
+    );
+  }
+  }

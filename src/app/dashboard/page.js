@@ -129,9 +129,10 @@ export default function Dashboard() {
           />
         )}
     
-        {showAddMenu && (
-          <AddItemMenu
+        {showAddMenu && 
+        (<AddItemMenu
             onClose={() => setAddMenuVisible(false)}
+            onAdd={fetchProducts}
           />
         )}
       </>
