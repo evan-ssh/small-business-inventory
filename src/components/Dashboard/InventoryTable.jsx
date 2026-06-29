@@ -14,7 +14,7 @@ export default function InventoryTable({products}){
           </tr>
         </thead>
         <tbody className="divide-y divide-white/5 text-sm">
-          {products.map((item) => (<InvRow key={item.id} product={item} />
+          {products.map((item) => (<InvRow key={item._id} product={item} />
           ))
           }
         </tbody>
