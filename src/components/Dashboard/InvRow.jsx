@@ -1,4 +1,4 @@
-export default function InvRow({ product }){
+export default function InvRow({ product, onEdit}){
     const getStatusStyle = (status) => {
         if(status === "Optimal"){
             return 'border-emerald-500/20 bg-emerald-500/10 text-emerald-400';
@@ -11,16 +11,22 @@ export default function InvRow({ product }){
     }
 
     return (
-        <tr className="hover:bg-white/[0.01] transition-colors">
+        <tr className="group hover:bg-white/[0.01] transition-colors">
           <td className="p-4 pl-6 font-medium text-white">{product.description}</td>
           <td className="p-4 font-mono text-xs text-slate-400">{product.sku}</td>
           <td className="p-4 text-slate-300">{product.type}</td>
           <td className="p-4 font-semibold text-slate-200">{product.qty} Units</td>
+          <td className="p-4 font-semibold text-slate-200">${Number(product.price ?? 0).toLocaleString("en-CA")}</td>
           <td className="p-4 pr-6 text-right">
             <span className={`inline-block rounded-md border px-2.5 py-0.5 text-xs font-medium ${getStatusStyle(product.status)}`}>
               {product.status} 
             </span>
           </td>
+          <td className="p-4 pr-6 text-right">
+            <button type="button" onClick={() => onEdit(product)} className="opacity-0 pointer-events-none group-hover:pointer-events-auto group-hover:opacity-100 transition rounded-lg border border-white/10 bg-white/10 px-3 py-1.5 text-sm text-white hover:bg-white hover:text-slate-950">
+            ✏️
+            </button>
+        </td>
         </tr>
       
     );

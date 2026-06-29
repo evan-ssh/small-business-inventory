@@ -1,7 +1,9 @@
 "use client";
 import {useState, useEffect} from "react";
-import InfoCard from "../../components/dashboard/InfoCard";
-import InventoryTable from "../../components/dashboard/InventoryTable";
+import InfoCard from "../../Components/Dashboard/InfoCard";
+import InventoryTable from "../../Components/Dashboard/InventoryTable";
+import EditMenu from "../../components/Dashboard/EditMenu";
+import AddItemMenu from "../../components/Dashboard/AddItemMenu";
 import { useRouter } from 'next/navigation';
 
 function countActiveUnits(products){
@@ -26,6 +28,8 @@ function countMonthlyTransactions(products){
 
 export default function Dashboard() {
     const [products, setProducts] = useState([]);
+    const [selectedItem, setSelected] = useState(null);
+    const [showAddMenu, setAddMenuVisible] = useState(false);
 
     const totalActiveUnits = countActiveUnits(products);
     const shortageCount = countShortages(products);
@@ -52,6 +56,7 @@ export default function Dashboard() {
  
 
     return (
+      <>
         <div className="min-h-screen bg-slate-950 text-white font-sans relative overflow-hidden pt-24 pb-4 px-4 sm:pt-28 sm:pb-8 sm:px-8 lg:pt-32 lg:pb-12 lg:px-12">
         
         <div className="pointer-events-none absolute inset-0 z-0">
@@ -71,7 +76,7 @@ export default function Dashboard() {
              
             </div>
             <div className="flex items-center gap-3">
-              <button className="rounded-xl bg-white px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-slate-950 shadow transition hover:bg-slate-200">
+              <button type="button" onClick={() => setAddMenuVisible(true)} className="rounded-xl bg-white px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-slate-950 shadow transition hover:bg-slate-200">
                 + New Asset
               </button>
             </div>
@@ -109,10 +114,26 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <InventoryTable products={products}></InventoryTable>
+            <InventoryTable products={products} onEdit={setSelected}></InventoryTable>
+
+            
               
             </div>
           </div>
+         
         </div>
+         {selectedItem && (
+          <EditMenu
+            product={selectedItem}
+            onClose={() => setSelected(null)}
+          />
+        )}
+    
+        {showAddMenu && (
+          <AddItemMenu
+            onClose={() => setAddMenuVisible(false)}
+          />
+        )}
+      </>
     );
   }

@@ -1,6 +1,6 @@
 import InvRow from "./InvRow"; 
 
-export default function InventoryTable({products}){
+export default function InventoryTable({products, onEdit}){
     return(
         <div className="overflow-x-auto">
       <table className="w-full text-left border-collapse">
@@ -10,11 +10,13 @@ export default function InventoryTable({products}){
             <th className="p-4">SKU Code</th>
             <th className="p-4">Product Type</th>
             <th className="p-4">Qty</th>
+            <th className="p-4">$ / Unit</th>
             <th className="p-4 pr-6 text-right">Status</th>
+            <th className="p-4 pr-6 text-right"></th>
           </tr>
         </thead>
         <tbody className="divide-y divide-white/5 text-sm">
-          {products.map((item) => (<InvRow key={item._id} product={item} />
+          {products.map((item) => (<InvRow key={item._id} product={item} onEdit={onEdit} />
           ))
           }
         </tbody>
