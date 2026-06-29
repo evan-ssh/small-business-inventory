@@ -4,8 +4,33 @@ import InfoCard from "../../components/dashboard/InfoCard";
 import InventoryTable from "../../components/dashboard/InventoryTable";
 import { useRouter } from 'next/navigation';
 
+function countActiveUnits(products){
+  return products.reduce((total,product) => {return total + Number(product.qty)}, 0);
+}
+
+function countShortages(products){
+  return products.filter((product) => {
+    return product.status === "Low Stock" || product.status === "Depleted";
+  }).length
+}
+
+
+function getNetVal(products){
+  return products.reduce((total,product) => {return total + (Number(product.price) * Number(product.qty))}, 0);
+}
+
+function countMonthlyTransactions(products){
+  return products.reduce((total,product) => {return total + Number(product.transactionsThisMonth ?? 0)},0)
+}
+
+
 export default function Dashboard() {
     const [products, setProducts] = useState([]);
+
+    const totalActiveUnits = countActiveUnits(products);
+    const shortageCount = countShortages(products);
+    const netValue = getNetVal(products);
+    const monthlyTransactions = countMonthlyTransactions(products);
     const router = useRouter();
 
     const fetchProducts = async () => {
@@ -54,10 +79,10 @@ export default function Dashboard() {
   
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             
-            <InfoCard label="Total Active Units" value="842" status="Stable" />
-            <InfoCard label="Critical Shortages" value="3 Items" status="Alert" isAlert={true} />
-            <InfoCard label="Transactions" value="129" status="This Month" />
-            <InfoCard label="Net Value" value="$24,910" status="CAD"></InfoCard>
+            <InfoCard label="Total Active Units" value={totalActiveUnits.toString()} subtext="Stable" />
+            <InfoCard label="Critical Shortages" value={`${shortageCount} Items`} subtext="Alert" isAlert={shortageCount>0} />
+            <InfoCard label="Transactions" value={monthlyTransactions.toString()} subtext="This Month" />
+            <InfoCard label="Net Value" value={`$${netValue.toLocaleString("en-CA")}`} subtext="CAD"></InfoCard>
   
           </div>
 

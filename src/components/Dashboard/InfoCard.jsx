@@ -1,4 +1,4 @@
-export default function InfoCard({label,value,status,isAlert}){
+export default function InfoCard({label,value,subtext,isAlert}){
     return(
         <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-md transition hover:border-red-400/20">
        <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
@@ -10,7 +10,7 @@ export default function InfoCard({label,value,status,isAlert}){
           {value}
         </span>
         <span className={`text-xs font-mono ${isAlert ? 'text-red-400/70' : 'text-slate-500'}`}>
-          {status}
+          {subtext}
         </span>
       </div>
     </div>
