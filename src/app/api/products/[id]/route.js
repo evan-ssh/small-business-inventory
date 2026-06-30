@@ -35,5 +35,22 @@ export async function PATCH(request,{params}){
             { error: "Failed to update product" },
             { status: 500 }
           );
-        }
+        }     
+}
+
+
+export async function DELETE(_request, {params}){
+    try{
+        const db = await getDB();
+        const {id} = await params;
+
+        await db.collection(collectionName).deleteOne({
+            _id: new ObjectId(id)
+        });
+
+        return NextResponse.json({message:"Product deleted "})
+    }catch(err){
+        console.log(err)
+        return NextResponse.json({error:"Failed to delete"},{status:500})
+    };
 }

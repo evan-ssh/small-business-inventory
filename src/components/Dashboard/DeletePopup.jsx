@@ -6,13 +6,23 @@ export default function DeletePopup({ product, onCancel, onConfirm }) {
   const [deleteInput, setDeleteInput] = useState("");
   const [errMsg, setErr] = useState("");
 
-  function handleSubmit() {
+async function handleSubmit() {
+  if(deleteInput === ""){
+    setErr("Input product name above")
+    return;
+  }
+
     if (deleteInput !== product.description) {
       setErr("Product name does not match.");
       return;
     }
 
-    onConfirm(product);
+    const deleteSuccess = await onConfirm(product);
+    
+    if(!deleteSuccess){
+      setDeleteInput("");
+      setErr("Failed to delete")
+    }
   }
 
   return (

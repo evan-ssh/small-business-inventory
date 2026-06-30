@@ -103,11 +103,24 @@ export default function EditMenu({ product, onClose,onUpdate }) {
     }
 
   
-    function handleDeleteConfirm(productToDelete) {
-      console.log("Test Deletion:", productToDelete);
-  
-      onClose();
+async function handleDeleteConfirm(productToDelete) {
+  try{
+    const response = await fetch(`/api/products/${productToDelete._id}`,{
+    method:"DELETE",
+  });
+  if(!response.ok){
+    return false;
+  }
+
+  await onUpdate();
+  onClose();
+
+  return true;
+  }catch(err){
+    console.log(err);
+    return false
     }
+  }
   
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 px-4 backdrop-blur-sm">
