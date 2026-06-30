@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState,useEffect,useActionState } from "react";
 import AddItemFields from "./AddItemFields";
+import {productAction } from "@/app/actions/products";
 
 function getStatusFromQty(qty) {
   if (qty <= 0) {
@@ -23,11 +24,23 @@ export default function AddItemMenu({ onClose, onAdd }) {
     qty: "0",
     price: "0",
   });
-  
-  const [errMsg, setErr] = useState("");
+
+
+  const [actionState, formAction, isPending] = useActionState(
+    productAction,
+    {success: false,error: "",} 
+  );
 
   const qtyNumber = Number(formData.qty || 0);
   const calculatedStatus = getStatusFromQty(qtyNumber);
+
+  useEffect(() => {
+    if (actionState.success) {
+      onAdd();
+      onClose();
+    }
+  }, [actionState.success, onAdd, onClose]);
+
 
   function handleChange(e) {
     const {name, value } = e.target;
@@ -36,52 +49,12 @@ export default function AddItemMenu({ onClose, onAdd }) {
       ...currentData,
       [name]: value,
     }));
-
-    setErr("");
   }
-
-  async function handleSave(e) {
-    e.preventDefault();
-    if (!formData.description.trim()) {
-      setErr("Product description is required.");
-      return;
-    }
-    const newProduct = {
-      description: formData.description.trim(),
-      sku: formData.sku.trim(),
-      type: formData.type.trim(),
-      qty: Number(formData.qty || 0),
-      price: Number(formData.price || 0),
-      status: calculatedStatus,
-      transactionsThisMonth: 0};
-      
-   try{
-    const response = await fetch("/api/products", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify(newProduct),
-     });
-     if (!response.ok) {
-      throw new Error("Failed to create product.");
-    }
-
-    await onAdd();
-    onClose();
-  } catch (err) {
-    setErr("Failed to create product.");
-    console.log(err);
-  }
-}
-
-      
-   
-   
-    
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 px-4 backdrop-blur-sm">
       <div className="w-full max-w-2xl overflow-hidden rounded-3xl border border-white/10 bg-slate-950/95 shadow-2xl shadow-black/40">
-        <form onSubmit={handleSave}>
+        <form action={formAction}>
           <div className="flex items-center justify-between border-b border-white/10 bg-white/[0.02] p-6">
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
@@ -100,9 +73,9 @@ export default function AddItemMenu({ onClose, onAdd }) {
             onChange={handleChange}
           />
 
-          {errMsg && (
+          {actionState.error &&(
             <p className="px-6 pb-4 text-sm font-medium text-red-400">
-              {errMsg}
+              {actionState.error}
             </p>
           )}
 
@@ -117,13 +90,14 @@ export default function AddItemMenu({ onClose, onAdd }) {
 
             <button
               type="submit"
-              className="rounded-xl bg-red-600 px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow transition hover:bg-red-500"
+              disabled={isPending}
+              className="rounded-xl bg-red-600 px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Save
+            {isPending ? "Saving..." : "Save"}
             </button>
           </div>
         </form>
       </div>
     </div>
   );
-}
+} 

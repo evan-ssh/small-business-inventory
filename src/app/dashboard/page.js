@@ -1,7 +1,7 @@
 "use client";
 import {useState, useEffect} from "react";
-import InfoCard from "../../Components/Dashboard/InfoCard";
-import InventoryTable from "../../Components/Dashboard/InventoryTable";
+import InfoCard from "../../components/Dashboard/InfoCard";
+import InventoryTable from "../../components/Dashboard/InventoryTable";
 import EditMenu from "../../components/Dashboard/EditMenu";
 import AddItemMenu from "../../components/Dashboard/AddItemMenu";
 import { useRouter } from 'next/navigation';
@@ -138,4 +138,4 @@ export default function Dashboard() {
         )}
       </>
     );
-  }   
+  }  
