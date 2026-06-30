@@ -4,8 +4,21 @@ import { useEffect, useState } from "react";
 import EditMenuFields from "./EditMenuFields";
 import DeletePopup from "./DeletePopup";
 
-export default function EditMenu({ product, onClose }) {
-    const [formData, setFormData] = useState({
+function getStatusFromQty(qty) {
+  if (qty <= 0) {
+    return "Depleted";
+  }
+
+  if (qty < 20) {
+    return "Low Stock";
+  }
+
+  return "Optimal";
+}
+
+export default function EditMenu({ product, onClose,onUpdate }) {
+  const [errMsg, setErr] = useState("");  
+  const [formData, setFormData] = useState({
       description: "",
       sku: "",
       type: "",
@@ -42,6 +55,7 @@ export default function EditMenu({ product, onClose }) {
         ...currentData,
         [name]: value,
       }));
+      setErr("");
     }
   
     function enableEdit(fieldName) {
@@ -51,13 +65,43 @@ export default function EditMenu({ product, onClose }) {
       }));
     }
   
-    function handleSave(e) {
+    async function handleSave(e) {
       e.preventDefault();
-  
-      console.log("Test Save:", formData);
-  
-      onClose();
+      const description = formData.description.trim();
+      const sku = formData.sku.trim();
+
+      if (!description) {setErr("Product description cannot be empty.");return;}
+      if (!sku) {setErr("SKU code cannot be empty."); return;}
+
+      const updatedProduct = {
+        description: formData.description.trim(),
+        sku: formData.sku.trim(),
+        type: formData.type.trim(),
+        qty: Number(formData.qty ?? 0),
+        price: Number(formData.price ?? 0),
+        status: getStatusFromQty(Number(formData.qty ?? 0)),
+      };
+      try{
+        const response = await fetch(`/api/products/${product._id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedProduct),
+          
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to update product.");
+        }
+       
+        await onUpdate();
+        onClose();
+
+    
+      }catch(err){
+        console.log(err)
+      }
     }
+
   
     function handleDeleteConfirm(productToDelete) {
       console.log("Test Deletion:", productToDelete);
@@ -95,7 +139,10 @@ export default function EditMenu({ product, onClose }) {
               onEnableEdit={enableEdit}
               onChange={handleChange}
             />
-  
+            {errMsg && (<p className="px-6 pb-4 text-sm font-medium text-red-400">
+              {errMsg}
+            </p>
+          )}
             <div className="flex items-center justify-between border-t border-white/10 bg-white/[0.02] p-6">
               <button
                 type="button"

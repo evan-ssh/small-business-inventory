@@ -126,6 +126,7 @@ export default function Dashboard() {
           <EditMenu
             product={selectedItem}
             onClose={() => setSelected(null)}
+            onUpdate={fetchProducts}
           />
         )}
     
