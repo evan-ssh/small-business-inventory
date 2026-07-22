@@ -1,19 +1,27 @@
 import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 import { getDB } from "@/lib/mongodb";
+import { getSessionUser } from "@/lib/session";
 
 const collectionName = "products";
 
 
 export async function PATCH(request,{params}){
     try{
+        const sessionUser = await getSessionUser();
+
+        if (!sessionUser) {
+        return NextResponse.json({ error: "Not signed in" });
+        }
+
         const db = await getDB();
         const updatedProduct = await request.json();
         const {id} = await params
 
         await db.collection(collectionName).updateOne(
             {
-                _id: new ObjectId(id) 
+                _id: new ObjectId(id), 
+                ownerId: sessionUser.userId
             },
             {
             $set:{
@@ -41,12 +49,18 @@ export async function PATCH(request,{params}){
 
 export async function DELETE(_request, {params}){
     try{
+        const sessionUser = await getSessionUser();
+
+        if (!sessionUser) {
+        return NextResponse.json({ error: "Not signed in" });
+        }
         const db = await getDB();
         const {id} = await params;
 
         await db.collection(collectionName).deleteOne({
-            _id: new ObjectId(id)
-        });
+            _id: new ObjectId(id),
+            ownerId: sessionUser.userId
+        }); 
 
         return NextResponse.json({message:"Product deleted "})
     }catch(err){

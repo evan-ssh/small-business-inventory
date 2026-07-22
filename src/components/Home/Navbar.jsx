@@ -53,6 +53,7 @@ export default function Navbar() {
             <img
               src={user.picture}
               alt={user.name || "User profile"}
+              referrerPolicy="no-referrer"
               className="h-9 w-9 rounded-full border border-white/10 object-cover"
             />
           )}

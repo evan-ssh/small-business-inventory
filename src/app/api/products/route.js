@@ -1,17 +1,21 @@
 import { NextResponse } from 'next/server';
 import { getDB } from '@/lib/mongodb';
-
+import { getSessionUser } from "@/lib/session";
 
 const collectionName = "products";
 
 
 export async function GET(){
   try{
+
+    const sessionUser = await getSessionUser();
+
+    if (!sessionUser) {
+      return NextResponse.json({ error: "Not signed in" });
+    }
     const db = await getDB();
 
-
-  
-    const products = await db.collection(collectionName).find({}).toArray();
+    const products = await db.collection(collectionName).find({ownerId: sessionUser.userId}).toArray();
 
     console.log(`Loaded ${products.length} products from ${collectionName} collection`);
     const normalizedProducts = products.map((product) => ({
@@ -32,6 +36,11 @@ export async function GET(){
   export async function POST(request){
     
   try{
+    const sessionUser = await getSessionUser();
+
+    if (!sessionUser) {
+      return NextResponse.json({ error: "Not signed in" });
+    }
     const db = await getDB();
     const product = await request.json();
     await db.collection(collectionName).insertOne({
@@ -42,6 +51,7 @@ export async function GET(){
       price: Number(product.price),
       status: product.status,
       transactionsThisMonth: Number(product.transactionsThisMonth ?? 0),
+      ownerId: sessionUser.userId
     });
     return NextResponse.json({message: "Product created"})
       
