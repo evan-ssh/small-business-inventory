@@ -147,4 +147,96 @@ body {
       opacity: 0.65;
     }
   }
+
+  .account-red-wave {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background:
+      radial-gradient(
+        circle at 85% 20%,
+        rgba(239, 68, 68, 0.32),
+        transparent 26%
+      ),
+      radial-gradient(
+        circle at 15% 90%,
+        rgba(127, 29, 29, 0.45),
+        transparent 34%
+      ),
+      repeating-linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.045) 0px,
+        rgba(255, 255, 255, 0.045) 1px,
+        transparent 1px,
+        transparent 12px
+      ),
+      linear-gradient(
+        135deg,
+        rgba(15, 23, 42, 0.95),
+        rgba(30, 41, 59, 0.78),
+        rgba(127, 29, 29, 0.32)
+      );
+  }
+  
+  .account-red-wave::before {
+    content: "";
+    position: absolute;
+    top: -40%;
+    left: -55%;
+    height: 180%;
+    width: 45%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(239, 68, 68, 0.08),
+      rgba(248, 113, 113, 0.34),
+      rgba(255, 255, 255, 0.16),
+      rgba(248, 113, 113, 0.28),
+      transparent
+    );
+    transform: rotate(18deg);
+    animation: accountScanBeam 4.5s ease-in-out infinite;
+  }
+  
+  .account-red-wave::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(
+        circle,
+        rgba(248, 113, 113, 0.28) 0px,
+        rgba(248, 113, 113, 0.28) 1px,
+        transparent 1px
+      );
+    background-size: 18px 18px;
+    opacity: 0.18;
+    mask-image: linear-gradient(
+      90deg,
+      transparent,
+      black 25%,
+      black 75%,
+      transparent
+    );
+  }
+  
+  @keyframes accountScanBeam {
+    0% {
+      left: -60%;
+      opacity: 0;
+    }
+  
+    20% {
+      opacity: 0.9;
+    }
+  
+    55% {
+      opacity: 0.7;
+    }
+  
+    100% {
+      left: 120%;
+      opacity: 0;
+    }
+  }
 }
