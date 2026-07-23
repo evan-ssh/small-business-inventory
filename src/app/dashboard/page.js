@@ -25,16 +25,29 @@ function countMonthlyTransactions(products){
   return products.reduce((total,product) => {return total + Number(product.transactionsThisMonth ?? 0)},0)
 }
 
+function searchProducts(products, searchWord) {
+  const search = searchWord.toLowerCase();
+
+  return products.filter((product) => {
+    return (
+      product.description?.toLowerCase().includes(search) ||
+      product.sku?.toLowerCase().includes(search) ||
+      product.type?.toLowerCase().includes(search) ||
+      product.status?.toLowerCase().includes(search)
+    );
+  });
+}
 
 export default function Dashboard() {
     const [products, setProducts] = useState([]);
     const [selectedItem, setSelected] = useState(null);
     const [showAddMenu, setAddMenuVisible] = useState(false);
-
+    const [searchWord, setSearchWord] = useState("");
     const totalActiveUnits = countActiveUnits(products);
     const shortageCount = countShortages(products);
     const netValue = getNetVal(products);
     const monthlyTransactions = countMonthlyTransactions(products);
+    const filteredProducts = searchProducts(products, searchWord);
     const router = useRouter();
 
     const fetchProducts = async () => {
@@ -108,13 +121,15 @@ export default function Dashboard() {
                 <input 
                   type="text" 
                   placeholder="Search Inventory..." 
-                  disabled
-                  className="w-full sm:w-64 rounded-xl border border-white/10 bg-slate-900/50 px-4 py-2 text-xs text-slate-400 outline-none cursor-not-allowed"
+                  value={searchWord}
+                  onChange={(event) => setSearchWord(event.target.value)}
+                  className="w-full sm:w-64 rounded-xl border border-white/10 bg-slate-900/50 px-4 py-2 text-xs text-slate-300 outline-none transition focus:border-red-500/50 focus:bg-slate-900"
                 />
+                  
               </div>
             </div>
 
-            <InventoryTable products={products} onEdit={setSelected}></InventoryTable>
+            <InventoryTable products={filteredProducts} onEdit={setSelected}></InventoryTable>
 
             
               
