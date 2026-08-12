@@ -52,6 +52,22 @@ export default function Navbar() {
               <span className={`absolute bottom-0 left-0 h-0.5 w-full rounded-full bg-red-500 transition-transform ${isPath('/dashboard') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`} />
             </Link>
              )}
+             {user && (
+            <Link
+              href="/stores"
+              className="group relative pb-1 text-sm font-medium text-slate-300 transition hover:text-white"
+            >
+              Stores
+
+              <span
+                className={`absolute bottom-0 left-0 h-0.5 w-full rounded-full bg-red-500 transition-transform ${
+                  currPath.startsWith("/stores")
+                    ? "scale-x-100"
+                    : "scale-x-0 group-hover:scale-x-100"
+                }`}
+              />
+            </Link>
+          )}
             <Link href="/contact" className="group relative pb-1 text-sm font-medium text-slate-300 transition hover:text-white">
               Contact
               <span className={`absolute bottom-0 left-0 h-0.5 w-full rounded-full bg-red-500 transition-transform ${isPath('/contact') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`} />

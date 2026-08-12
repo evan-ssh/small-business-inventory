@@ -41,7 +41,7 @@ export async function PATCH(request,{params}){
       
           return NextResponse.json(
             { error: "Failed to update product" },
-            { status: 500 }
+            { status: 500 }  
           );
         }     
 }
