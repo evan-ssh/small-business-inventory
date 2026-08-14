@@ -44,7 +44,7 @@ export default function SmartPanel() {
         >
           <span className="text-lg transition-transform group-hover:scale-110">✨</span>
           <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 transition group-hover:text-white">
-            Generate Smart Analysis
+          View Smart Panel 
           </span>
         </button>
       ) : (
@@ -55,10 +55,10 @@ export default function SmartPanel() {
               <span className="text-xl">✨</span>
               <div>
                 <h3 className="text-sm font-bold uppercase tracking-wider text-white">
-                  Smart AI Analysis
+                  View Smart Panel 
                 </h3>
                 <p className="mt-1 text-xs text-slate-500">
-                  Insights based on your current workspace inventory
+                    Based on current store's inventory
                 </p>
               </div>
             </div>
@@ -108,7 +108,7 @@ export default function SmartPanel() {
                       <div className="border-t border-white/5 pt-3 mt-2 flex items-center justify-between text-xs">
                         <span className="text-red-400 font-medium">{item.recommendedAction}</span>
                         {item.suggestedQuantity > 0 && (
-                          <span className="text-slate-300 font-mono">+{item.suggestedQuantity} units</span>
+                          <span className="text-slate-300 font-mono">+{item.suggestedQuantity} items</span>
                         )}
                       </div>
                     </div>

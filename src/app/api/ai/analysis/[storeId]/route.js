@@ -54,31 +54,38 @@ export async function GET(request, { params }) {
         );
       }
   
-    const result = await generateText({
-      model: groqModels("openai/gpt-oss-20b"),
-      system: "You are an expert inventory and business analytics assistant. Evaluate items meticulously.",
-      prompt: `Analyze the following workspace inventory items. 
-      CRITICAL RULE: Only include items that are Low Stock, Depleted, or require active restocking/action. Do NOT include items with optimal or stable stock levels.
-      
-      For the filtered items, provide:
-      1. Inventory health analysis, priorities, suggested reorder quantities, and specific actions.
-      2. 2-4 creative new product recommendations that complement the store's existing categories and items.
-
-      Inventory Data:
-      ${JSON.stringify(ProductsNeedAttention, null, 2)}`,
-      output: Output.object({
-        name: "inventory_analysis",
-        description: "Structured inventory analysis and product recommendations",
-        schema: recommendationSchema,
-      }),
-      maxRetries: 0,
-      providerOptions: {
-        groq: {
-          reasoningEffort: "low",
+      const result = await generateText({
+        model: groqModels("openai/gpt-oss-20b"),
+        system: "You are an expert inventory logistic business analytics assistant. Evaluate items meticulously.",
+        prompt: `Analyze the following workspace inventory data. 
+        
+        CRITICAL RULES:
+        1. For the inventory health analysis, ONLY evaluate the items listed under "Items Needing Attention" below.
+        2. For the new product recommendations, look at the "Full Store Inventory" to understand all existing categories and items so you can suggest creative complementary products.
+  
+        Items Needing Attention:
+        ${JSON.stringify(ProductsNeedAttention, null, 2)}
+  
+        Full Store Inventory :
+        ${JSON.stringify(products, null, 2)}`,
+        
+        output: Output.object({
+          name: "inventory_analysis",
+          description: "Structured inventory analysis and product recommendations",
+          schema: recommendationSchema,
+        }),
+        maxRetries: 0,
+        providerOptions: {
+          groq: {
+            reasoningEffort: "low",
+          },
         },
-      },
-      maxOutputTokens: 2500,
-    });
+        maxOutputTokens: 2500,
+      });
+
+
+
+
     return NextResponse.json(result.output, { status: 200 });
   } catch (error) {
     console.error("AI Analysis Route Error:", error);

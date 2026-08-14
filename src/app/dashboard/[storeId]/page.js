@@ -195,10 +195,6 @@ export default function Dashboard() {
                 <h2 className="text-base font-bold text-white">
                   Stock
                 </h2>
-
-                <p className="mt-1 text-xs text-slate-500">
-                  Products in the selected store workspace
-                </p>
               </div>
 
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -211,6 +207,18 @@ export default function Dashboard() {
                 >
                   + Place Order
                 </button>
+                
+
+                <input
+                  type="text"
+                  placeholder="Search inventory..."
+                  value={searchWord}
+                  onChange={(event) =>
+                    setSearchWord(event.target.value)
+                  }
+                  className="w-full rounded-xl border border-white/10 bg-slate-900/50 px-4 py-2.5 text-xs text-slate-300 outline-none transition focus:border-red-500/50 focus:bg-slate-900 sm:w-64"
+                />
+
                 <button
                   type="button"
                   onClick={fetchProducts}
@@ -233,16 +241,6 @@ export default function Dashboard() {
                     <path d="M3 3v5h5" />
                   </svg>
                 </button>
-
-                <input
-                  type="text"
-                  placeholder="Search inventory..."
-                  value={searchWord}
-                  onChange={(event) =>
-                    setSearchWord(event.target.value)
-                  }
-                  className="w-full rounded-xl border border-white/10 bg-slate-900/50 px-4 py-2.5 text-xs text-slate-300 outline-none transition focus:border-red-500/50 focus:bg-slate-900 sm:w-64"
-                />
               </div>
             </div>
 

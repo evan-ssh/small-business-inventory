@@ -56,5 +56,5 @@ export const recommendationSchema = z.object({
         .min(1)
         .describe("Why this item should be introduced based on current store sales and types"),
     })
-  ),
+  ).min(4, "Must provide at least 4 new product recommendations"),
 });
