@@ -71,7 +71,15 @@ export default function EditMenuFields({
             onEdit={() => onEnableEdit("qty")}
             onChange={onChange}
           />
-
+        <EditableField
+            label="Low Stock Threshold"
+            name="threshold"
+            type="number"
+            value={currFormValues.threshold}
+            isEditing={editableFields.threshold}
+            onEdit={() => onEnableEdit("threshold")}
+            onChange={onChange}
+          />
         <EditableField
             label="$ / Unit"
             name="price"

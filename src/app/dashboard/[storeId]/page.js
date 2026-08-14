@@ -7,6 +7,7 @@ import InfoCard from "../../../components/Dashboard/InfoCard";
 import InventoryTable from "../../../components/Dashboard/InventoryTable";
 import EditMenu from "../../../components/Dashboard/EditMenu";
 import AddItemMenu from "../../../components/Dashboard/AddItemMenu";
+import SmartPanel from "../../../components/Dashboard/SmartPanel";
 
 function countActiveUnits(products) {
   return products.reduce(
@@ -186,7 +187,7 @@ export default function Dashboard() {
               subtext="CAD"
             />
           </div>
-
+          <SmartPanel></SmartPanel>
           {/* Inventory table */}
           <section className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] shadow-2xl backdrop-blur-md">
             <div className="flex flex-col gap-4 border-b border-white/10 bg-white/[0.01] p-6 lg:flex-row lg:items-center lg:justify-between">
@@ -210,13 +211,27 @@ export default function Dashboard() {
                 >
                   + Place Order
                 </button>
-
                 <button
                   type="button"
                   onClick={fetchProducts}
-                  className="rounded-xl bg-slate-800 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow transition hover:bg-slate-700"
+                  aria-label="Refresh Table"
+                  title="Refresh Table"
+                  className="flex items-center justify-center rounded-xl bg-transparent p-2.5 text-slate-400 transition hover:bg-white/5 hover:text-white"
                 >
-                  Refresh Table
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    width="18" 
+                    height="18" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                  >
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                    <path d="M3 3v5h5" />
+                  </svg>
                 </button>
 
                 <input

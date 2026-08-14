@@ -31,6 +31,7 @@ export async function PATCH(request,{params}){
                 qty: Number(updatedProduct.qty),
                 price: Number(updatedProduct.price),
                 status: updatedProduct.status,
+                threshold: Number(updatedProduct.threshold ?? 10),
               }
             }
           );

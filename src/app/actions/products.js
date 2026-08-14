@@ -6,12 +6,12 @@ import { ObjectId } from "mongodb";
 
 const collectionName = "products";
 
-function getStatusFromQty(qty) {
+function getProductStatus(qty,threshold) {
   if (qty <= 0) {
     return "Depleted";
   }
 
-  if (qty < 20) {
+  if (qty < threshold) {
     return "Low Stock";
   }
 
@@ -34,6 +34,7 @@ export async function productAction(prevState, formData){
         const sku = formData.get("sku")?.toString().trim();
         const type = formData.get("type")?.toString().trim();
         const qty = Number(formData.get("qty") ?? 0);
+        const threshold = Number(formData.get("threshold") ?? 10);
         const price = Number(formData.get("price") ?? 0);
         const storeIdValue = formData.get("storeId")?.toString();
         if (!description) {
@@ -68,13 +69,15 @@ export async function productAction(prevState, formData){
           };
         }
 
+    //Insert Product        
     await db.collection(collectionName).insertOne({
         description,
         sku,
         type,
         qty,
+        threshold,
         price,
-        status:getStatusFromQty(qty),
+        status:getProductStatus(qty,threshold),
         transactionsThisMonth:0,
         storeId,
         ownerId: sessionUser.userId,

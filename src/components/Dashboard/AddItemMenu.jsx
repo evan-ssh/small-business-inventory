@@ -31,6 +31,7 @@ export default function AddItemMenu({
     sku: "",
     type: "",
     qty: "0",
+    threshold: 10,
     price: "0",
   });
 
@@ -61,13 +62,15 @@ export default function AddItemMenu({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 px-4 backdrop-blur-sm">
-      <div className="w-full max-w-2xl overflow-hidden rounded-3xl border border-white/10 bg-slate-950/95 shadow-2xl shadow-black/40">
-        <form action={formAction}>
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-sm">
+      <div className="flex min-h-full items-center justify-center p-4">
+      <div className="my-8 flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-white/10 bg-slate-950/95 shadow-2xl shadow-black/40">
+        <form action={formAction} className="flex min-h-0 flex-col">
+          
           {/* Sends the selected workspace to productAction */}
           <input
             type="hidden"
-            name="storeId"
+            name="storeId" 
             value={storeId || ""}
           />
 
@@ -82,18 +85,19 @@ export default function AddItemMenu({
               </h2>
             </div>
           </div>
-
+          <div className="flex-1 overflow-y-auto">
           <AddItemFields
             currFormValues={formData}
             calculatedStatus={calculatedStatus}
             onChange={handleChange}
           />
-
+          
           {actionState.error && (
             <p className="px-6 pb-4 text-sm font-medium text-red-400">
               {actionState.error}
             </p>
           )}
+        </div>
 
           <div className="flex items-center justify-between border-t border-white/10 bg-white/[0.02] p-6">
             <button
@@ -114,6 +118,7 @@ export default function AddItemMenu({
           </div>
         </form>
       </div>
+    </div>
     </div>
   );
 }

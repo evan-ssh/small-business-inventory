@@ -57,6 +57,13 @@ export default function AddItemFields({
         onChange={onChange}
       />
       <AddField
+        label="Low Stock Threshold"
+        name="threshold"
+        type="number"
+        value={currFormValues.threshold}
+        onChange={onChange}
+      />
+      <AddField
         label="$ / Unit"
         name="price"
         type="number"
@@ -64,13 +71,6 @@ export default function AddItemFields({
         onChange={onChange}
         />
 
-      <AddField
-        label="Status"
-        name="status"
-        value={calculatedStatus}
-        readOnly={true}
-        onChange={onChange}
-      />
     </div>
   );
 }

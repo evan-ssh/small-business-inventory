@@ -60,6 +60,7 @@ export async function GET(request) {
       sku: product.sku ?? "",
       type: product.type ?? "",
       qty: Number(product.qty ?? 0),
+      threshold: Number(product.threshold ?? 10),
       price: Number(product.price ?? 0),
       status: product.status ?? "",
       transactionsThisMonth: Number(
@@ -119,13 +120,25 @@ export async function GET(request) {
         { status: 403 }
       );
     }
+
+    const qty = Number(product.qty ?? 0);
+      const threshold = Number(product.threshold ?? 10);
+      
+      // Calculate status dynamically
+      let status = "Optimal";
+      if (qty <= 0) {
+        status = "Out of Stock";
+      } else if (qty <= threshold) {
+        status = "Low Stock";
+      }
     await db.collection(collectionName).insertOne({
       description: product.description,
       sku: product.sku,
       type: product.type,
       qty: Number(product.qty),
       price: Number(product.price),
-      status: product.status,
+      status,
+      threshold,
       transactionsThisMonth: Number(product.transactionsThisMonth ?? 0),
       storeId,
       ownerId: sessionUser.userId

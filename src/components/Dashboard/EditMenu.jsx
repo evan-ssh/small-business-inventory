@@ -4,12 +4,12 @@ import { useEffect, useState } from "react";
 import EditMenuFields from "./EditMenuFields";
 import DeletePopup from "./DeletePopup";
 
-function getStatusFromQty(qty) {
+function getProductStatus(qty, threshold) {
   if (qty <= 0) {
     return "Depleted";
   }
 
-  if (qty < 20) {
+  if (qty < threshold) {
     return "Low Stock";
   }
 
@@ -23,6 +23,7 @@ export default function EditMenu({ product, onClose,onUpdate }) {
       sku: "",
       type: "",
       qty: "",
+      threshold:"",
       price:""
     });
   
@@ -31,6 +32,7 @@ export default function EditMenu({ product, onClose,onUpdate }) {
       sku: false,
       type: false,
       qty: false,
+      threshold:false,
       price:false,
     });
   
@@ -43,6 +45,7 @@ export default function EditMenu({ product, onClose,onUpdate }) {
           sku: product.sku,
           type: product.type,
           qty: product.qty,
+          threshold: product.threshold ?? 10,
           price: product.price,
         });
       }
@@ -78,8 +81,9 @@ export default function EditMenu({ product, onClose,onUpdate }) {
         sku: formData.sku.trim(),
         type: formData.type.trim(),
         qty: Number(formData.qty ?? 0),
+        threshold: Number(formData.threshold ?? 10),
         price: Number(formData.price ?? 0),
-        status: getStatusFromQty(Number(formData.qty ?? 0)),
+        status: getProductStatus(Number(formData.qty ?? 0), Number(formData.threshold ?? 10)),
       };
       try{
         const response = await fetch(`/api/products/${product._id}`, {
@@ -123,10 +127,10 @@ async function handleDeleteConfirm(productToDelete) {
   }
   
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 px-4 backdrop-blur-sm">
-        <div className="w-full max-w-2xl overflow-hidden rounded-3xl border border-white/10 bg-slate-950/95 shadow-2xl shadow-black/40">
-          <form onSubmit={handleSave}>
-            <div className="flex items-center justify-between border-b border-white/10 bg-white/[0.02] p-6">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 px-4 py-8 backdrop-blur-sm">
+        <div className="flex max-h-full w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-white/10 bg-slate-950/95 shadow-2xl shadow-black/40">
+          <form onSubmit={handleSave} className="flex min-h-0 flex-col">
+            <div className="flex shrink-0 items-center justify-between border-b border-white/10 bg-white/[0.02] p-6">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                   SKU Code
@@ -145,7 +149,7 @@ async function handleDeleteConfirm(productToDelete) {
                 Delete
               </button>
             </div>
-  
+          <div className="flex-1 overflow-y-auto">
             <EditMenuFields
               currFormValues={formData}
               editableFields={editableFields}
@@ -156,6 +160,7 @@ async function handleDeleteConfirm(productToDelete) {
               {errMsg}
             </p>
           )}
+          </div>
             <div className="flex items-center justify-between border-t border-white/10 bg-white/[0.02] p-6">
               <button
                 type="button"
