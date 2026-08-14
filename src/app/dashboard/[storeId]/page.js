@@ -187,7 +187,7 @@ export default function Dashboard() {
               subtext="CAD"
             />
           </div>
-          <SmartPanel></SmartPanel>
+          <SmartPanel/>
           {/* Inventory table */}
           <section className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] shadow-2xl backdrop-blur-md">
             <div className="flex flex-col gap-4 border-b border-white/10 bg-white/[0.01] p-6 lg:flex-row lg:items-center lg:justify-between">
