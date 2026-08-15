@@ -57,11 +57,12 @@ export async function GET(request, { params }) {
       const result = await generateText({
         model: groqModels("openai/gpt-oss-20b"),
         system: "You are an expert inventory logistic business analytics assistant. Evaluate items meticulously.",
-        prompt: `Analyze the following workspace inventory data. 
+        prompt: `Analyze the following workspace inventory data.  
         
         CRITICAL RULES:
         1. For the inventory health analysis, ONLY evaluate the items listed under "Items Needing Attention" below.
         2. For the new product recommendations, look at the "Full Store Inventory" to understand all existing categories and items so you can suggest creative complementary products.
+        3.You MUST provide at least 4 items in the newProductRecommendations array...
   
         Items Needing Attention:
         ${JSON.stringify(ProductsNeedAttention, null, 2)}

@@ -14,7 +14,7 @@ export default function SmartPanel() {
 
   const handleReport = async () => {
     setIsOpen(true);
-    if (analysisData) return; 
+
 
     setLoading(true);
     setError("");
@@ -62,13 +62,36 @@ export default function SmartPanel() {
                 </p>
               </div>
             </div>
-            
+            <div className="flex items-center gap-2">
+            <button
+                type="button"
+                onClick={handleReport}
+                disabled={loading}
+                aria-label="Refresh Analysis"
+                title="Refresh Analysis"
+                className="flex items-center justify-center rounded-xl border border-white/10 bg-white/5 p-2.5 text-slate-400 transition hover:bg-white/10 hover:text-white disabled:opacity-50"
+              >
+                <svg 
+                  xmlns="http://www.w3.org/2000/svg" 
+                  width="16" 
+                  height="16" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="2" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"
+                >
+                  <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.68-5.68"/>
+                </svg>
+              </button>
             <button
               onClick={() => setIsOpen(false)}
               className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white transition hover:bg-white hover:text-slate-950"
             >
               Close
             </button>
+            </div>
             </div>
             {loading && (
             <div className="flex flex-col items-center justify-center py-12 text-center">
