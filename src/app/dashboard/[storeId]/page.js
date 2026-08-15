@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
-import InfoCard from "../../../components/Dashboard/InfoCard";
+
 import InventoryTable from "../../../components/Dashboard/InventoryTable";
 import EditMenu from "../../../components/Dashboard/EditMenu";
 import AddItemMenu from "../../../components/Dashboard/AddItemMenu";
@@ -129,16 +129,23 @@ export default function Dashboard() {
         </div>
 
         <div className="relative z-10 mx-auto max-w-7xl space-y-8">
-          {/* Dashboard heading */}
+        {/* Dashboard heading */}
           <div className="flex flex-col gap-4 border-b border-white/10 pb-6 md:flex-row md:items-center md:justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.25em] text-red-300">
                 Store Workspace
               </p>
+              <div className="mt-2 flex flex-wrap items-center gap-3">
+                <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+                  Inventory
+                </h1>
 
-              <h1 className="mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-                Inventory
-              </h1>
+                <div className={`flex items-center gap-2 rounded-lg border px-1 py-1 text-xs transition-all ${shortageCount > 0 ? 'border-red-500/30 bg-red-500/10 text-red-200' : 'border-white/10 bg-white/[0.02] text-slate-300'}`}>
+                  <span className="font-semibold text-slate-400">Critical Shortages:</span>
+                  <span className="font-bold">{shortageCount} Items</span>
+                  
+                </div>
+              </div>
             </div>
 
             <div className="flex items-center gap-3">
@@ -161,40 +168,30 @@ export default function Dashboard() {
           </div>
 
           {/* Summary cards */}
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <InfoCard
-              label="Total Active Units"
-              value={totalActiveUnits.toString()}
-              subtext="Stable"
-            />
+          <SmartPanel />
 
-            <InfoCard
-              label="Critical Shortages"
-              value={`${shortageCount} Items`}
-              subtext="Alert"
-              isAlert={shortageCount > 0}
-            />
-
-            <InfoCard
-              label="Transactions"
-              value={monthlyTransactions.toString()}
-              subtext="This Month"
-            />
-
-            <InfoCard
-              label="Net Value"
-              value={`$${netValue.toLocaleString("en-CA")}`}
-              subtext="CAD"
-            />
-          </div>
-          <SmartPanel/>
           {/* Inventory table */}
           <section className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] shadow-2xl backdrop-blur-md">
             <div className="flex flex-col gap-4 border-b border-white/10 bg-white/[0.01] p-6 lg:flex-row lg:items-center lg:justify-between">
-              <div>
+              <div className="flex flex-col gap-2 xl:flex-row xl:items-baseline xl:gap-8">
                 <h2 className="text-base font-bold text-white">
                   Stock
                 </h2>
+
+                <div className="flex flex-wrap items-center gap-6 text-xs text-slate-400">
+                  <div>
+                    <span className="font-semibold uppercase tracking-wider text-slate-500">Total Units: </span>
+                    <span className="font-bold text-white">{totalActiveUnits}</span>
+                  </div>
+                  <div>
+                    <span className="font-semibold uppercase tracking-wider text-slate-500">Transactions: </span>
+                    <span className="font-bold text-white">{monthlyTransactions}</span>
+                  </div>
+                  <div>
+                    <span className="font-semibold uppercase tracking-wider text-slate-500">Net Value: </span>
+                    <span className="font-bold text-white">${netValue.toLocaleString("en-CA")} CAD</span>
+                  </div>
+                </div>
               </div>
 
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -207,7 +204,6 @@ export default function Dashboard() {
                 >
                   + Place Order
                 </button>
-                
 
                 <input
                   type="text"
@@ -270,6 +266,8 @@ export default function Dashboard() {
               <InventoryTable
                 products={filteredProducts}
                 onEdit={setSelected}
+                totalUnits={totalActiveUnits}
+                transactions={monthlyTransactions}
               />
             )}
           </section>
