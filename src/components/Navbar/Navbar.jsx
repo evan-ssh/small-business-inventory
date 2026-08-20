@@ -10,6 +10,7 @@ export default function Navbar() {
   const currPath = usePathname();
   const [user, setUser] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);  
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isPath = (navPath) => currPath === navPath;
   const selectedInventory = {
     name: "Personal Inventory",
@@ -27,87 +28,175 @@ export default function Navbar() {
     loadSession();
     }, []);
 
+   
+
+    const openSidebar = () => {
+      setMobileMenuOpen(false);
+      setSidebarOpen(true);
+    };
+  
+    const closeSidebar = () => {
+      setSidebarOpen(false);
+    };
+  
+    const toggleMobileMenu = () => {
+      setMobileMenuOpen((prev) => !prev);
+    };
+  
     return (
       <>
-        <nav className="fixed left-0 top-0 z-50 w-full border-b border-white/10 bg-slate-950/80 px-8 py-4 backdrop-blur-md sm:px-10 lg:px-12">
+      <nav className="fixed left-0 top-0 z-50 w-full border-b border-white/10 bg-slate-950/90 px-4 py-4 backdrop-blur-md sm:px-8 lg:px-12">
         <div className="flex w-full items-center justify-between">
-          <Link href="/" className="flex items-center gap-3">
+
+          {/* Logo */}
+          <Link href="/" className="flex shrink-0 items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10">
               <span className="text-lg font-bold text-white">S</span>
             </div>
-  
+
             <span className="text-xl font-bold tracking-tight text-white">
               StockPilot
             </span>
           </Link>
-  
+
+          {/* Desktop Navigation */}
           <div className="hidden items-center gap-8 md:flex">
-            <Link href="/" className="group relative pb-1 text-sm font-medium text-slate-300 transition hover:text-white">
-              Home
-              <span className={`absolute bottom-0 left-0 h-0.5 w-full rounded-full bg-red-500 transition-transform ${isPath('/') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`} />
-            </Link>
-            {user && (
-            <Link href="/dashboard" className="group relative pb-1 text-sm font-medium text-slate-300 transition hover:text-white">
-              Dashboard
-              <span className={`absolute bottom-0 left-0 h-0.5 w-full rounded-full bg-red-500 transition-transform ${isPath('/dashboard') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`} />
-            </Link>
-             )}
-             {user && (
             <Link
-              href="/stores"
+              href="/"
               className="group relative pb-1 text-sm font-medium text-slate-300 transition hover:text-white"
             >
-              Stores
+              Home
 
               <span
                 className={`absolute bottom-0 left-0 h-0.5 w-full rounded-full bg-red-500 transition-transform ${
-                  currPath.startsWith("/stores")
+                  isPath("/")
                     ? "scale-x-100"
                     : "scale-x-0 group-hover:scale-x-100"
                 }`}
               />
             </Link>
-          )}
-            <Link href="/contact" className="group relative pb-1 text-sm font-medium text-slate-300 transition hover:text-white">
-              Contact
-              <span className={`absolute bottom-0 left-0 h-0.5 w-full rounded-full bg-red-500 transition-transform ${isPath('/contact') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`} />
-            </Link>
-            {user ? (
-              <button type="button" onClick={() => setSidebarOpen(true)}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/10 transition hover:bg-white/20"
-            >
-            {user.picture ? (
-              <img
-                src={user.picture}
-                alt={user.name || "User profile"}
-                referrerPolicy="no-referrer"
-                className="h-10 w-10 rounded-full object-cover"
-              />
-            ) : (
-              <span className="text-sm font-bold text-white">
-                {user.name?.charAt(0) || "U"}
-              </span>
+
+            {user && (
+              <Link
+                href="/dashboard"
+                className="group relative pb-1 text-sm font-medium text-slate-300 transition hover:text-white"
+              >
+                Dashboard
+
+                <span
+                  className={`absolute bottom-0 left-0 h-0.5 w-full rounded-full bg-red-500 transition-transform ${
+                    isPath("/dashboard")
+                      ? "scale-x-100"
+                      : "scale-x-0 group-hover:scale-x-100"
+                  }`}
+                />
+              </Link>
             )}
-          </button>
-        ) : (
-          <Link
-            href="/login"
-            className="rounded-full border border-white/10 bg-white/10 px-5 py-2 text-sm font-semibold text-white transition hover:bg-white hover:text-slate-950"
-          >
-            Login
-          </Link>
-        )}
-           </div>
+
+            {user && (
+              <Link
+                href="/stores"
+                className="group relative pb-1 text-sm font-medium text-slate-300 transition hover:text-white"
+              >
+                Stores
+
+                <span
+                  className={`absolute bottom-0 left-0 h-0.5 w-full rounded-full bg-red-500 transition-transform ${
+                    currPath.startsWith("/stores")
+                      ? "scale-x-100"
+                      : "scale-x-0 group-hover:scale-x-100"
+                  }`}
+                />
+              </Link>
+            )}
+
+            <Link
+              href="/contact"
+              className="group relative pb-1 text-sm font-medium text-slate-300 transition hover:text-white"
+            >
+              Contact
+
+              <span
+                className={`absolute bottom-0 left-0 h-0.5 w-full rounded-full bg-red-500 transition-transform ${
+                  isPath("/contact")
+                    ? "scale-x-100"
+                    : "scale-x-0 group-hover:scale-x-100"
+                }`}
+              />
+            </Link>
+
+            {/* Profile */}
+            {user ? (
+              <button
+                type="button"
+                onClick={openSidebar}
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/10 transition hover:bg-white/20"
+                aria-label="Open account menu"
+              >
+                {user.picture ? (
+                  <img
+                    src={user.picture}
+                    alt={user.name || "User profile"}
+                    referrerPolicy="no-referrer"
+                    className="h-full w-full rounded-full object-cover"
+                  />
+                ) : (
+                  <span className="text-sm font-bold text-white">
+                    {user.name?.charAt(0) || "U"}
+                  </span>
+                )}
+              </button>
+            ) : (
+              <Link
+                href="/login"
+                className="rounded-full border border-white/10 bg-white/10 px-5 py-2 text-sm font-semibold text-white transition hover:bg-white hover:text-slate-950"
+              >
+                Login
+              </Link>
+            )}
+          </div>
+
+          {/* Mobile Profile */}
+          <div className="flex items-center md:hidden">
+            {user ? (
+              <button
+                type="button"
+                onClick={openSidebar}
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/10 transition hover:bg-white/20"
+                aria-label="Open account menu"
+              >
+                {user.picture ? (
+                  <img
+                    src={user.picture}
+                    alt={user.name || "User profile"}
+                    referrerPolicy="no-referrer"
+                    className="h-full w-full rounded-full object-cover"
+                  />
+                ) : (
+                  <span className="text-xs font-bold text-white">
+                    {user.name?.charAt(0) || "U"}
+                  </span>
+                )}
+              </button>
+            ) : (
+              <Link
+                href="/login"
+                className="rounded-full border border-white/10 bg-white/10 px-5 py-2 text-sm font-semibold text-white"
+              >
+                Login
+              </Link>
+            )}
+          </div>
         </div>
       </nav>
-      {user && sidebarOpen && (
-      <AccountSidebar
-        user={user}
-        selectedInventory={selectedInventory}
-        onClose={() => setSidebarOpen(false)}
-      />
-    )}
 
-</>
-);
+      {/* Workspace / Account Sidebar */}
+      {user && sidebarOpen && (
+        <AccountSidebar
+          user={user}
+          onClose={closeSidebar}
+        />
+      )}
+    </>
+  );
 }
