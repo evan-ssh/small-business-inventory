@@ -11,17 +11,51 @@ export async function PATCH(request,{params}){
         const sessionUser = await getSessionUser();
 
         if (!sessionUser) {
-        return NextResponse.json({ error: "Not signed in" });
+        return NextResponse.json({ error: "Not signed in" },{ status: 401 });
         }
 
         const db = await getDB();
         const updatedProduct = await request.json();
         const {id} = await params
 
+        const product = await db.collection(collectionName).findOne({
+            _id: new ObjectId(id),
+          });
+          if (!product) {
+            return NextResponse.json(
+              { error: "Product not found" },
+              { status: 404 }
+            );
+          }
+
+            // Check the user's membership in the product's store
+        const membership = await db.collection("storeMembers").findOne({
+        userId: sessionUser.userId,
+        storeId: product.storeId,
+        });
+
+        if (!membership) {
+        return NextResponse.json(
+            { error: "You do not have access to this store" },
+            { status: 403 }
+        );
+        }
+
+        // Owners have full access
+        if (
+        membership.role !== "owner" &&
+        !membership.permissions?.update
+        ) {
+        return NextResponse.json(
+            { error: "You do not have permission to update products" },
+            { status: 403 }
+        );
+        }
+
+
         await db.collection(collectionName).updateOne(
             {
                 _id: new ObjectId(id), 
-                ownerId: sessionUser.userId
             },
             {
             $set:{
@@ -53,14 +87,48 @@ export async function DELETE(_request, {params}){
         const sessionUser = await getSessionUser();
 
         if (!sessionUser) {
-        return NextResponse.json({ error: "Not signed in" });
+        return NextResponse.json({ error: "Not signed in" },{ status: 401 });
         }
         const db = await getDB();
         const {id} = await params;
+        const product = await db.collection(collectionName).findOne({
+            _id: new ObjectId(id),
+          });
+      
+          if (!product) {
+            return NextResponse.json(
+              { error: "Product not found" },
+              { status: 404 }
+            );
+          }
+
+          // Check the user's membership in the product's store
+        const membership = await db.collection("storeMembers").findOne({
+        userId: sessionUser.userId,
+        storeId: product.storeId,
+        });
+
+        if (!membership) {
+        return NextResponse.json(
+            { error: "You do not have access to this store" },
+            { status: 403 }
+        );
+        }
+
+        // Owners have full access
+        if (
+        membership.role !== "owner" &&
+        !membership.permissions?.delete
+        ) {
+        return NextResponse.json(
+            { error: "You do not have permission to delete products" },
+            { status: 403 }
+        );
+        }
 
         await db.collection(collectionName).deleteOne({
             _id: new ObjectId(id),
-            ownerId: sessionUser.userId
+
         }); 
 
         return NextResponse.json({message:"Product deleted "})

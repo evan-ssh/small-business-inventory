@@ -94,7 +94,10 @@ export default function EditMenu({ product, onClose,onUpdate }) {
         });
 
         if (!response.ok) {
-          throw new Error("Failed to update product.");
+          const data = await response.json();
+          setErr(data.error || "You do not have permission to update this product.");
+          return;
+          
         }
        
         await onUpdate();
@@ -112,17 +115,23 @@ async function handleDeleteConfirm(productToDelete) {
     const response = await fetch(`/api/products/${productToDelete._id}`,{
     method:"DELETE",
   });
+
+
   if(!response.ok){
-    return false;
+    const data = await response.json();
+      return {
+        success: false,
+        error: data.error || "Failed to delete product check permissions.",
   }
+}
 
   await onUpdate();
   onClose();
 
-  return true;
+  return{success:true}
   }catch(err){
     console.log(err);
-    return false
+    return {success:false,error:"Failed to delete product check response"}
     }
   }
   
@@ -150,16 +159,20 @@ async function handleDeleteConfirm(productToDelete) {
               </button>
             </div>
           <div className="flex-1 overflow-y-auto">
+          {errMsg && (
+              <div className="mx-6 mt-4 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3">
+                <p className="text-sm font-medium text-red-400">
+                  {errMsg}
+                </p>
+              </div>
+            )}
             <EditMenuFields
               currFormValues={formData}
               editableFields={editableFields}
               onEnableEdit={enableEdit}
               onChange={handleChange}
             />
-            {errMsg && (<p className="px-6 pb-4 text-sm font-medium text-red-400">
-              {errMsg}
-            </p>
-          )}
+          
           </div>
             <div className="flex items-center justify-between border-t border-white/10 bg-white/[0.02] p-6">
               <button

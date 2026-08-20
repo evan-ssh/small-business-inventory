@@ -2,17 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-
 import AddMemberPanel from "./AddMemberPanel";
 import StoreMembersList from "./StoreMembersList";
 
-export default function DashboardActionBar({
-  storeId,
-  currentUser,
-  storeMembers = [],
-  setAddMenuVisible,
-  onMemberAdded,
-}) {
+export default function DashboardActionBar({storeId,userRole,storeMembers = [],permissions = {},setAddMenuVisible,onMemberAdded,}) 
+{
   const router = useRouter();
 
   const [membersMenuOpen, setMembersMenuOpen] = useState(false);
@@ -133,34 +127,36 @@ export default function DashboardActionBar({
                 )}
               </div>
 
-              <div className="flex flex-col gap-2 border-t border-white/10 pt-2">
+              {userRole === "owner" && (
+            <div className="flex flex-col gap-2 border-t border-white/10 pt-2">
                 <button
-                  type="button"
-                  onClick={() => {
+                type="button"
+                onClick={() => {
                     setMembersMenuOpen(false);
                     setShowAddMemberPanel(true);
-                  }}
-                  className="w-full rounded-xl bg-red-600 py-2 text-center text-xs font-semibold uppercase tracking-wider text-white transition hover:bg-red-500"
+                }}
+                className="w-full rounded-xl bg-red-600 py-2 text-center text-xs font-semibold uppercase tracking-wider text-white transition hover:bg-red-500"
                 >
-                  + Add New Member
+                + Add New Member
                 </button>
 
                 <button
-                  type="button"
-                  onClick={() => {
+                type="button"
+                onClick={() => {
                     setMembersMenuOpen(false);
                     setShowManageMembersOverlay(true);
-                  }}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 py-2 text-center text-xs font-semibold uppercase tracking-wider text-slate-300 transition hover:bg-white/10 hover:text-white"
+                }}
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-2 text-center text-xs font-semibold uppercase tracking-wider text-slate-300 transition hover:bg-white/10 hover:text-white"
                 >
-                  Manage Permissions
+                Manage Permissions
                 </button>
-              </div>
+            </div>
+            )}
             </div>
           )}
         </div>
 
-        {/* All Stores */}
+        {/* Stores */}
         <button
           type="button"
           onClick={() => router.push("/stores")}
@@ -170,6 +166,7 @@ export default function DashboardActionBar({
         </button>
 
         {/* New Asset */}
+        {permissions.create && (
         <button
           type="button"
           onClick={() => setAddMenuVisible(true)}
@@ -177,6 +174,7 @@ export default function DashboardActionBar({
         >
           + New Asset
         </button>
+        )}
       </div>
 
       {/* Add Member */}

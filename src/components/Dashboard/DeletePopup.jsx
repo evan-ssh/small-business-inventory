@@ -17,11 +17,10 @@ async function handleSubmit() {
       return;
     }
 
-    const deleteSuccess = await onConfirm(product);
-    
-    if(!deleteSuccess){
-      setDeleteInput("");
-      setErr("Failed to delete")
+    const result = await onConfirm(product);
+
+    if (!result.success) {
+      setErr(result.error);
     }
   }
 

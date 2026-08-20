@@ -72,6 +72,13 @@ export default function Dashboard() {
   const [allowed, setAllowed] = useState(false);
   const [accessChecked, setAccessChecked] = useState(false);
 
+    const [permissions, setPermissions] = useState({
+      view: false,
+      create: false,
+      update: false,
+      delete: false,
+    });
+  const [userRole, setUserRole] = useState("");
   const totalActiveUnits = countActiveUnits(products);
   const shortageCount = countShortages(products);
   const netValue = getNetVal(products);
@@ -93,7 +100,7 @@ export default function Dashboard() {
           return false;
         }
     
-        return true;
+        return data.user;
       } catch (error) {
         console.error("Failed to check session:", error);
         router.push("/login");
@@ -155,7 +162,8 @@ export default function Dashboard() {
     }, [storeId]);
     
     // Fetch store members
-    const fetchStoreMembers = useCallback(async () => {
+   
+    const fetchStoreMembers = useCallback(async (sessionUser) => {
       if (!storeId) return;
     
       try {
@@ -166,31 +174,49 @@ export default function Dashboard() {
           throw new Error(data.error || "Failed to load store members");
         }
     
-        setStoreMembers(data.members || []);
+        const members = data.members || [];
+    
+        setStoreMembers(members);
+    
+        // Find membership
+        const currentMember = members.find(
+          (member) => member.userId === sessionUser.userId
+        );
+    
+        if (currentMember) {
+          setUserRole(currentMember.role);
+        
+          setPermissions(
+            currentMember.permissions || {
+              view: false,
+              create: false,
+              update: false,
+              delete: false,
+            }
+          );
+        }
       } catch (error) {
         console.error("Failed to fetch store members:", error);
       }
     }, [storeId]);
-    
-    // Initial dashboard access flow
+
+
     useEffect(() => {
       async function initializeDashboard() {
         if (!storeId) return;
     
         setLoading(true);
-    
-        // Step 1: Make sure user is authenticated
-        const authenticated = await fetchSession();
-        if (!authenticated) return;
-    
-        // Step 2: Make sure user belongs to this store
+   
+        const sessionUser = await fetchSession();
+
+        if (!sessionUser) return;
+
         const hasAccess = await checkStoreAccess();
         if (!hasAccess) return;
-    
-        // Step 3: Load store data
+
         await Promise.all([
           fetchProducts(),
-          fetchStoreMembers(),
+          fetchStoreMembers(sessionUser),
         ]);
       }
     
@@ -203,7 +229,7 @@ export default function Dashboard() {
       fetchStoreMembers,
     ]);
     
-    // Don't render dashboard until access check
+    // Don't render table until access check
     if (!accessChecked || !allowed) {
       return (
         <div className="flex min-h-screen items-center justify-center bg-slate-950 text-slate-400">
@@ -233,6 +259,8 @@ export default function Dashboard() {
           <DashboardActionBar
             storeId={storeId}
             storeMembers={storeMembers}
+            permissions={permissions}
+            userRole={userRole}
             setAddMenuVisible={setAddMenuVisible}
             onMemberAdded={(newMember) => {
               setStoreMembers((prev) => [...prev, newMember]);
