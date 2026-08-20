@@ -29,7 +29,29 @@ export default function DashboardActionBar({storeId,userRole,storeMembers = [],p
   return (
     <>
       <div className="flex items-center gap-3">
-        {/* Members */}
+        
+
+        {/* Stores */}
+        <button
+          type="button"
+          onClick={() => router.push("/stores")}
+          className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-white transition hover:bg-white hover:text-slate-950"
+        >
+          All Stores
+        </button>
+
+        {/* New Asset */}
+        {permissions.create && (
+        <button
+          type="button"
+          onClick={() => setAddMenuVisible(true)}
+          className="rounded-xl bg-white px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-slate-950 shadow transition hover:bg-slate-200"
+        >
+          + New Asset
+        </button>
+        )}
+
+{/* Members */}
         <div className="relative" ref={dropdownRef}>
           <button
             type="button"
@@ -155,26 +177,6 @@ export default function DashboardActionBar({storeId,userRole,storeMembers = [],p
             </div>
           )}
         </div>
-
-        {/* Stores */}
-        <button
-          type="button"
-          onClick={() => router.push("/stores")}
-          className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-white transition hover:bg-white hover:text-slate-950"
-        >
-          All Stores
-        </button>
-
-        {/* New Asset */}
-        {permissions.create && (
-        <button
-          type="button"
-          onClick={() => setAddMenuVisible(true)}
-          className="rounded-xl bg-white px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-slate-950 shadow transition hover:bg-slate-200"
-        >
-          + New Asset
-        </button>
-        )}
       </div>
 
       {/* Add Member */}
