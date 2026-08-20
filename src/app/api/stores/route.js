@@ -84,7 +84,7 @@ export async function GET() {
         return {
           ...store,
           _id: store._id.toString(),
-          role: membership?.role || "member",
+          role: membership?.role || "staff",
 
           products: products.length,
           activeUnits,
@@ -145,6 +145,12 @@ export async function POST(request) {
       userId: user.userId,
       storeId: storeResult.insertedId,
       role: "owner",
+      permissions: {
+        view: true,
+        create: true,
+        update: true,
+        delete: true,
+      },
       createdAt: now,
     });
 
