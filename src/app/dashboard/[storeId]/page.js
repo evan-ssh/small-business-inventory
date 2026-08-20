@@ -4,10 +4,10 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
 
-import InventoryTable from "../../../components/Dashboard/InventoryTable";
-import EditMenu from "../../../components/Dashboard/EditMenu";
-import AddItemMenu from "../../../components/Dashboard/AddItemMenu";
-import SmartPanel from "../../../components/Dashboard/SmartPanel";
+import InventoryTable from "@/components/Dashboard/InventoryTable";
+import EditMenu from "@/components/Dashboard/EditMenu";
+import AddItemMenu from "@/components/Dashboard/AddItemMenu";
+import SmartPanel from "@/components/Dashboard/SmartPanel";
 
 function countActiveUnits(products) {
   return products.reduce(
@@ -118,7 +118,7 @@ export default function Dashboard() {
 
   return (
     <>
-      <main className="relative min-h-screen overflow-hidden bg-slate-950 px-4 pb-4 pt-24 font-sans text-white sm:px-8 sm:pb-8 sm:pt-28 lg:px-12 lg:pb-12 lg:pt-32">
+      <main className="relative min-h-screen overflow-x-hidden bg-slate-950 px-4 pb-4 pt-24 ...">
         {/* Background effects */}
         <div className="pointer-events-none absolute inset-0 z-0">
           <div className="absolute left-0 top-0 h-96 w-96 rounded-full bg-red-500/5 blur-[150px]" />
