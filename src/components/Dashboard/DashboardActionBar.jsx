@@ -75,7 +75,7 @@ export default function DashboardActionBar({storeId,userRole,storeMembers = [],p
 
           {/* Members Dropdown */}
           {membersMenuOpen && (
-            <div className="absolute right-0 z-50 mt-2 w-72 rounded-2xl border border-white/10 bg-slate-950 p-4 shadow-2xl backdrop-blur-xl">
+           <div className="absolute right-0 z-50 mt-2 w-72 max-w-[calc(100vw-1rem)] rounded-2xl border border-white/10 bg-slate-950 p-4 shadow-2xl backdrop-blur-xl">
               <div className="flex items-center justify-between border-b border-white/10 pb-3">
                 <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
                   Workspace Access
