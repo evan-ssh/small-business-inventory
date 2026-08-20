@@ -1,7 +1,6 @@
 "use client";
 import {useState, useEffect} from "react";
-import InfoCard from "../../components/dashboard/InfoCard";
-import InventoryTable from "../../components/dashboard/InventoryTable";
+import InventoryTable from" @/components/dashboard/InventoryTable";
 
 
 
