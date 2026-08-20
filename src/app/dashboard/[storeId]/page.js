@@ -2,12 +2,11 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-
-
 import InventoryTable from "@/components/Dashboard/InventoryTable";
 import EditMenu from "@/components/Dashboard/EditMenu";
 import AddItemMenu from "@/components/Dashboard/AddItemMenu";
 import SmartPanel from "@/components/Dashboard/SmartPanel";
+import DashboardActionBar from "@/components/Dashboard/DashboardActionBar";
 
 function countActiveUnits(products) {
   return products.reduce(
@@ -69,226 +68,235 @@ export default function Dashboard() {
   const [searchWord, setSearchWord] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [storeMembers, setStoreMembers] = useState([]);
+  const [allowed, setAllowed] = useState(false);
+  const [accessChecked, setAccessChecked] = useState(false);
 
   const totalActiveUnits = countActiveUnits(products);
   const shortageCount = countShortages(products);
   const netValue = getNetVal(products);
-  const monthlyTransactions =
-    countMonthlyTransactions(products);
+  const monthlyTransactions = countMonthlyTransactions(products);
+  const filteredProducts = searchProducts(products, searchWord);
 
-  const filteredProducts = searchProducts(
-    products,
-    searchWord
-  );
-
-  const fetchProducts = useCallback(async () => {
-    if (!storeId) {
-      return;
-    }
-
-    try {
-      setLoading(true);
-      setError("");
-
-      const response = await fetch(
-        `/api/products?storeId=${storeId}`
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          data.error ||
-            `Error loading products: ${response.status}`
-        );
+    const fetchSession = useCallback(async () => {
+      try {
+        const response = await fetch("/api/auth/session");
+    
+        if (!response.ok) {
+          throw new Error("Failed to fetch session");
+        }
+    
+        const data = await response.json();
+    
+        if (!data?.user) {
+          router.push("/login");
+          return false;
+        }
+    
+        return true;
+      } catch (error) {
+        console.error("Failed to check session:", error);
+        router.push("/login");
+        return false;
       }
-
-      setProducts(data);
-    } catch (error) {
-      console.error("Failed to fetch products:", error);
-      setError(error.message || "Failed to load products");
-    } finally {
-      setLoading(false);
-    }
-  }, [storeId]);
-
-  useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
-
-  return (
-    <>
-      <main className="relative min-h-screen overflow-x-hidden bg-slate-950 px-4 pb-4 pt-24 ...">
-        {/* Background effects */}
-        <div className="pointer-events-none absolute inset-0 z-0">
-          <div className="absolute left-0 top-0 h-96 w-96 rounded-full bg-red-500/5 blur-[150px]" />
-
-          <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-white/5 blur-[120px]" />
-
-          <div className="absolute left-1/3 top-1/2 h-[30rem] w-[30rem] rounded-full bg-red-500/[0.03] blur-[140px]" />
+    }, [router]);
+    
+    // Check whether user belongs to this store
+    const checkStoreAccess = useCallback(async () => {
+      if (!storeId) return false;
+    
+      try {
+        const response = await fetch(`/api/stores/${storeId}`);
+        const data = await response.json();
+    
+        if (!response.ok || !data.allowed) {
+          console.error("Store access denied:", data.error);
+          setAllowed(false);
+          router.push("/stores");
+          return false;
+        }
+    
+        setAllowed(true);
+        return true;
+      } catch (error) {
+        console.error("Failed to check store access:", error);
+        setAllowed(false);
+        router.push("/stores");
+        return false;
+      } finally {
+        setAccessChecked(true);
+      }
+    }, [storeId, router]);
+    
+    // Fetch products
+    const fetchProducts = useCallback(async () => {
+      if (!storeId) return;
+    
+      try {
+        setLoading(true);
+        setError("");
+    
+        const response = await fetch(`/api/products?storeId=${storeId}`);
+        const data = await response.json();
+    
+        if (!response.ok) {
+          throw new Error(
+            data.error || `Error loading products: ${response.status}`
+          );
+        }
+    
+        setProducts(data);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+        setError(error.message || "Failed to load products");
+      } finally {
+        setLoading(false);
+      }
+    }, [storeId]);
+    
+    // Fetch store members
+    const fetchStoreMembers = useCallback(async () => {
+      if (!storeId) return;
+    
+      try {
+        const response = await fetch(`/api/stores/${storeId}/members`);
+        const data = await response.json();
+    
+        if (!response.ok) {
+          throw new Error(data.error || "Failed to load store members");
+        }
+    
+        setStoreMembers(data.members || []);
+      } catch (error) {
+        console.error("Failed to fetch store members:", error);
+      }
+    }, [storeId]);
+    
+    // Initial dashboard access flow
+    useEffect(() => {
+      async function initializeDashboard() {
+        if (!storeId) return;
+    
+        setLoading(true);
+    
+        // Step 1: Make sure user is authenticated
+        const authenticated = await fetchSession();
+        if (!authenticated) return;
+    
+        // Step 2: Make sure user belongs to this store
+        const hasAccess = await checkStoreAccess();
+        if (!hasAccess) return;
+    
+        // Step 3: Load store data
+        await Promise.all([
+          fetchProducts(),
+          fetchStoreMembers(),
+        ]);
+      }
+    
+      initializeDashboard();
+    }, [
+      storeId,
+      fetchSession,
+      checkStoreAccess,
+      fetchProducts,
+      fetchStoreMembers,
+    ]);
+    
+    // Don't render dashboard until access check
+    if (!accessChecked || !allowed) {
+      return (
+        <div className="flex min-h-screen items-center justify-center bg-slate-950 text-slate-400">
+          <p className="text-xs font-semibold uppercase tracking-wider">
+            Checking workspace access...
+          </p>
         </div>
-
-        <div className="relative z-10 mx-auto max-w-7xl space-y-8">
-        {/* Dashboard heading */}
-          <div className="flex flex-col gap-4 border-b border-white/10 pb-6 md:flex-row md:items-center md:justify-between">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-red-300">
-                Store Workspace
-              </p>
-              <div className="mt-2 flex flex-wrap items-center gap-3">
-                <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
-                  Inventory
-                </h1>
-
-                <div className={`flex items-center gap-2 rounded-lg border px-1 py-1 text-xs transition-all ${shortageCount > 0 ? 'border-red-500/30 bg-red-500/10 text-red-200' : 'border-white/10 bg-white/[0.02] text-slate-300'}`}>
-                  <span className="font-semibold text-slate-400">Critical Shortages:</span>
-                  <span className="font-bold">{shortageCount} Items</span>
-                  
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={() => router.push("/stores")}
-                className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-white transition hover:bg-white hover:text-slate-950"
-              >
-                All Stores
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setAddMenuVisible(true)}
-                className="rounded-xl bg-white px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-slate-950 shadow transition hover:bg-slate-200"
-              >
-                + New Asset
-              </button>
+      );
+    }
+    
+    return (
+      <div className="min-h-screen space-y-8 bg-slate-950 px-6 pb-6 pt-28 text-slate-100 md:px-10 md:pb-10 md:pt-32">
+        {/* Top Header Action Bar */}
+        <div className="flex flex-col items-start justify-between gap-4 border-b border-white/10 pb-6 md:flex-row md:items-center">
+          <div>
+            <div className="flex flex-wrap items-center gap-3">
+              <h1 className="text-2xl font-bold text-white">
+                Inventory
+              </h1>
+    
+              <span className="rounded-lg border border-red-500/30 bg-red-500/10 px-2.5 py-1 text-xs font-semibold text-red-300">
+                Critical Shortages: {shortageCount} Items
+              </span>
             </div>
           </div>
-
-          {/* Summary cards */}
-          <SmartPanel />
-
-          {/* Inventory table */}
-          <section className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] shadow-2xl backdrop-blur-md">
-            <div className="flex flex-col gap-4 border-b border-white/10 bg-white/[0.01] p-6 lg:flex-row lg:items-center lg:justify-between">
-              <div className="flex flex-col gap-2 xl:flex-row xl:items-baseline xl:gap-8">
-                <h2 className="text-base font-bold text-white">
-                  Stock
-                </h2>
-
-                <div className="flex flex-wrap items-center gap-6 text-xs text-slate-400">
-                  <div>
-                    <span className="font-semibold uppercase tracking-wider text-slate-500">Total Units: </span>
-                    <span className="font-bold text-white">{totalActiveUnits}</span>
-                  </div>
-                  <div>
-                    <span className="font-semibold uppercase tracking-wider text-slate-500">Transactions: </span>
-                    <span className="font-bold text-white">{monthlyTransactions}</span>
-                  </div>
-                  <div>
-                    <span className="font-semibold uppercase tracking-wider text-slate-500">Net Value: </span>
-                    <span className="font-bold text-white">${netValue.toLocaleString("en-CA")} CAD</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                <button
-                  type="button"
-                  onClick={() =>
-                    router.push(`/order?storeId=${storeId}`)
-                  }
-                  className="rounded-xl bg-red-600 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow transition hover:bg-red-500"
-                >
-                  + Place Order
-                </button>
-
-                <input
-                  type="text"
-                  placeholder="Search inventory..."
-                  value={searchWord}
-                  onChange={(event) =>
-                    setSearchWord(event.target.value)
-                  }
-                  className="w-full rounded-xl border border-white/10 bg-slate-900/50 px-4 py-2.5 text-xs text-slate-300 outline-none transition focus:border-red-500/50 focus:bg-slate-900 sm:w-64"
-                />
-
-                <button
-                  type="button"
-                  onClick={fetchProducts}
-                  aria-label="Refresh Table"
-                  title="Refresh Table"
-                  className="flex items-center justify-center rounded-xl bg-transparent p-2.5 text-slate-400 transition hover:bg-white/5 hover:text-white"
-                >
-                  <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    width="18" 
-                    height="18" 
-                    viewBox="0 0 24 24" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    strokeWidth="2" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round"
-                  >
-                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-                    <path d="M3 3v5h5" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            {loading && (
-              <div className="p-10 text-center text-sm text-slate-400">
-                Loading inventory...
-              </div>
-            )}
-
-            {!loading && error && (
-              <div className="p-10 text-center">
-                <p className="text-sm text-red-300">
-                  {error}
-                </p>
-
-                <button
-                  type="button"
-                  onClick={fetchProducts}
-                  className="mt-4 rounded-xl bg-white/10 px-4 py-2 text-xs font-semibold text-white transition hover:bg-white/20"
-                >
-                  Try Again
-                </button>
-              </div>
-            )}
-
-            {!loading && !error && (
-              <InventoryTable
-                products={filteredProducts}
-                onEdit={setSelected}
-                totalUnits={totalActiveUnits}
-                transactions={monthlyTransactions}
-              />
-            )}
-          </section>
+    
+          <DashboardActionBar
+            storeId={storeId}
+            storeMembers={storeMembers}
+            setAddMenuVisible={setAddMenuVisible}
+            onMemberAdded={(newMember) => {
+              setStoreMembers((prev) => [...prev, newMember]);
+            }}
+          />
         </div>
-      </main>
-
-      {selectedItem && (
-        <EditMenu
-          product={selectedItem}
-          onClose={() => setSelected(null)}
-          onUpdate={fetchProducts}
-        />
-      )}
-
-      {showAddMenu && (
-        <AddItemMenu
-          storeId={storeId}
-          onClose={() => setAddMenuVisible(false)}
-          onAdd={fetchProducts}
-        />
-      )}
-    </>
-  );
-}
+    
+        {/* AI Smart Panel */}
+        <SmartPanel />
+    
+        {/* Main Inventory Table */}
+        <div className="overflow-hidden rounded-3xl border border-white/10 bg-slate-950/60 shadow-2xl backdrop-blur-md">
+          {loading && (
+            <div className="p-12 text-center text-xs uppercase tracking-wider text-slate-400">
+              Loading Workspace Assets...
+            </div>
+          )}
+    
+          {!loading && error && (
+            <div className="p-12 text-center">
+              <p className="text-sm text-red-400">{error}</p>
+    
+              <button
+                type="button"
+                onClick={fetchProducts}
+                className="mt-4 rounded-xl bg-white/10 px-4 py-2 text-xs font-semibold text-white transition hover:bg-white/20"
+              >
+                Try Again
+              </button>
+            </div>
+          )}
+    
+          {!loading && !error && (
+            <InventoryTable
+              products={filteredProducts}
+              onEdit={setSelected}
+              totalUnits={totalActiveUnits}
+              transactions={monthlyTransactions}
+              netValue={netValue}
+              searchWord={searchWord}
+              setSearchWord={setSearchWord}
+              onRefresh={fetchProducts}
+              onPlaceOrder={() => router.push("/order")}
+            />
+          )}
+        </div>
+    
+        {/* Add Item Menu */}
+        {showAddMenu && (
+          <AddItemMenu
+            storeId={storeId}
+            onClose={() => setAddMenuVisible(false)}
+            onAdd={fetchProducts}
+          />
+        )}
+    
+        {/* Edit Item Menu */}
+        {selectedItem && (
+          <EditMenu
+            product={selectedItem}
+            onClose={() => setSelected(null)}
+            onUpdate={fetchProducts}
+          />
+        )}
+      </div>
+    );
+  }
