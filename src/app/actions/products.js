@@ -54,7 +54,7 @@ export async function productAction(prevState, formData){
         const storeId = new ObjectId(storeIdValue);
         const db = await getDB();
     
-        // Verify that the user belongs to this store.
+ 
         const membership = await db
           .collection("storeMembers")
           .findOne({
@@ -66,6 +66,12 @@ export async function productAction(prevState, formData){
           return {
             success: false,
             error: "You do not have access to this store",
+          };
+        }
+        if (membership.role !== "owner" && !membership.permissions?.create) {
+          return {
+            success: false,
+            error: "You do not have permission to create products",
           };
         }
 
