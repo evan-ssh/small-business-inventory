@@ -2,7 +2,7 @@
 import { getDB } from "@/lib/mongodb";
 import { getSessionUser } from "@/lib/session"
 import { ObjectId } from "mongodb";
-
+import { getStoreMembership,hasStorePermission } from "@/lib/store";
 
 const collectionName = "products";
 
@@ -30,13 +30,14 @@ export async function productAction(prevState, formData){
       
 
         const description = formData.get("description")?.toString().trim();
-        
         const sku = formData.get("sku")?.toString().trim();
         const type = formData.get("type")?.toString().trim();
         const qty = Number(formData.get("qty") ?? 0);
         const threshold = Number(formData.get("threshold") ?? 10);
         const price = Number(formData.get("price") ?? 0);
         const storeIdValue = formData.get("storeId")?.toString();
+
+
         if (!description) {
           return {
             success: false,
@@ -52,29 +53,18 @@ export async function productAction(prevState, formData){
         }
 
         const storeId = new ObjectId(storeIdValue);
-        const db = await getDB();
+        
+        const membership = await getStoreMembership(storeIdValue);
     
- 
-        const membership = await db
-          .collection("storeMembers")
-          .findOne({
-            userId: sessionUser.userId,
-            storeId,
-          });
-    
-        if (!membership) {
-          return {
-            success: false,
-            error: "You do not have access to this store",
-          };
-        }
-        if (membership.role !== "owner" && !membership.permissions?.create) {
-          return {
-            success: false,
-            error: "You do not have permission to create products",
-          };
+        if (!membership) {return {success: false,error: "You do not have access to this store"};}
+
+
+        if (!hasStorePermission(membership, "create")){
+          return {success: false,error: "You do not have permission to create products",};
         }
 
+        const db = await getDB();
+        
     //Insert Product        
     await db.collection(collectionName).insertOne({
         description,
