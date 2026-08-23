@@ -18,8 +18,10 @@ export default function BarcodeCenter() {
   const [scannedProduct, setScannedProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [scannerKey, setScannerKey] = useState(0);
 
   const barcodeCanvasRef = useRef(null);
+  const scannerRef = useRef(null);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -55,6 +57,7 @@ export default function BarcodeCenter() {
         }
       } catch (error) {
         console.error("Failed to load products:", error);
+
         setError(
           error.message || "Failed to load products."
         );
@@ -82,10 +85,12 @@ export default function BarcodeCenter() {
       bwipjs.toCanvas(barcodeCanvasRef.current, {
         bcid: "code128",
         text: selectedProduct.barcode,
-        scale: 3,
-        height: 18,
+        scale: 5,
+        height: 30,
         includetext: true,
         textxalign: "center",
+        paddingwidth: 10,
+        paddingheight: 10,
       });
     } catch (error) {
       console.error(
@@ -103,12 +108,12 @@ export default function BarcodeCenter() {
     }
 
     const scanner = new Html5QrcodeScanner(
-      "barcode-reader",
+      `barcode-reader-${scannerKey}`,
       {
         fps: 10,
         qrbox: {
-          width: 280,
-          height: 120,
+          width: 320,
+          height: 160,
         },
         rememberLastUsedCamera: true,
         supportedScanTypes: [
@@ -118,19 +123,34 @@ export default function BarcodeCenter() {
       false
     );
 
+    scannerRef.current = scanner;
+
     scanner.render(
-      (decodedText) => {
-        setScannedBarcode(decodedText);
+      async (decodedText) => {
+        const scannedValue = decodedText.trim();
+
+        setScannedBarcode(scannedValue);
 
         const matchingProduct = products.find(
           (product) =>
-            product.barcode === decodedText
+            product.barcode?.trim() === scannedValue
         );
 
-        if (matchingProduct) {
-          setScannedProduct(matchingProduct);
-        } else {
+        if (!matchingProduct) {
           setScannedProduct(null);
+          return;
+        }
+
+        setScannedProduct(matchingProduct);
+
+        try {
+          await scanner.clear();
+          scannerRef.current = null;
+        } catch (error) {
+          console.error(
+            "Failed to stop scanner:",
+            error
+          );
         }
       },
       () => {
@@ -139,19 +159,19 @@ export default function BarcodeCenter() {
     );
 
     return () => {
-      scanner
-        .clear()
-        .catch((error) => {
-          console.error(
-            "Failed to stop scanner:",
-            error
-          );
-        });
+      scanner.clear().catch(() => {});
+      scannerRef.current = null;
     };
-  }, [products, storeId]);
+  }, [products, storeId, scannerKey]);
 
   function handlePrint() {
     window.print();
+  }
+
+  function handleScanAgain() {
+    setScannedBarcode("");
+    setScannedProduct(null);
+    setScannerKey((currentKey) => currentKey + 1);
   }
 
   return (
@@ -236,7 +256,7 @@ export default function BarcodeCenter() {
                 {selectedProduct && (
                   <div
                     id="printable-barcode"
-                    className="mt-6 rounded-2xl bg-white p-6 text-center"
+                    className="mt-6 overflow-x-auto rounded-2xl bg-white p-8 text-center"
                   >
                     <p className="text-sm font-bold text-slate-900">
                       {selectedProduct.description}
@@ -248,13 +268,13 @@ export default function BarcodeCenter() {
 
                     {selectedProduct.barcode ? (
                       <>
-                        <div className="mt-4 flex justify-center">
+                        <div className="mt-6 flex min-w-[420px] justify-center">
                           <canvas
                             ref={barcodeCanvasRef}
                           />
                         </div>
 
-                        <p className="mt-2 text-xs text-slate-500">
+                        <p className="mt-3 text-xs text-slate-500">
                           {selectedProduct.barcode}
                         </p>
                       </>
@@ -297,10 +317,12 @@ export default function BarcodeCenter() {
               </p>
             </div>
 
-            <div
-              id="barcode-reader"
-              className="overflow-hidden rounded-2xl border border-white/10 bg-slate-900"
-            />
+            {!scannedProduct && (
+              <div
+                id={`barcode-reader-${scannerKey}`}
+                className="overflow-hidden rounded-2xl border border-white/10 bg-slate-900"
+              />
+            )}
 
             {scannedBarcode && (
               <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
@@ -329,6 +351,7 @@ export default function BarcodeCenter() {
                     <p className="text-slate-500">
                       SKU
                     </p>
+
                     <p className="text-white">
                       {scannedProduct.sku}
                     </p>
@@ -338,6 +361,7 @@ export default function BarcodeCenter() {
                     <p className="text-slate-500">
                       Stock
                     </p>
+
                     <p className="text-white">
                       {scannedProduct.qty}
                     </p>
@@ -347,6 +371,7 @@ export default function BarcodeCenter() {
                     <p className="text-slate-500">
                       Price
                     </p>
+
                     <p className="text-white">
                       $
                       {Number(
@@ -359,11 +384,20 @@ export default function BarcodeCenter() {
                     <p className="text-slate-500">
                       Status
                     </p>
+
                     <p className="text-white">
                       {scannedProduct.status}
                     </p>
                   </div>
                 </div>
+
+                <button
+                  type="button"
+                  onClick={handleScanAgain}
+                  className="mt-5 w-full rounded-xl bg-red-600 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-white transition hover:bg-red-500"
+                >
+                  Scan Another Product
+                </button>
               </div>
             )}
 
@@ -381,6 +415,3 @@ export default function BarcodeCenter() {
     </main>
   );
 }
-
-
-/////
