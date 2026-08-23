@@ -7,6 +7,7 @@ import EditMenu from "@/components/Dashboard/EditMenu";
 import AddItemMenu from "@/components/Dashboard/AddItemMenu";
 import SmartPanel from "@/components/Dashboard/SmartPanel";
 import DashboardActionBar from "@/components/Dashboard/DashboardActionBar";
+import Link from "next/link";
 
 function countActiveUnits(products) {
   return products.reduce(
@@ -303,7 +304,7 @@ export default function Dashboard() {
               searchWord={searchWord}
               setSearchWord={setSearchWord}
               onRefresh={fetchProducts}
-              onPlaceOrder={() => router.push("/order")}
+              scannerHref={`/scanner?storeId=${storeId}`}
             />
           )}
         </div>

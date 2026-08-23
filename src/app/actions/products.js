@@ -18,6 +18,10 @@ function getProductStatus(qty,threshold) {
   return "Optimal";
 }
 
+function generateBarcode() {
+  return `SP-${crypto.randomUUID().replaceAll("-", "").slice(0, 12).toUpperCase()}`;
+}
+
 //Create
 export async function productAction(prevState, formData){
     try {
@@ -78,6 +82,7 @@ export async function productAction(prevState, formData){
         transactionsThisMonth:0,
         storeId,
         ownerId: sessionUser.userId,
+        barcode: generateBarcode(), 
     });
 
     return{success: true,error:""};

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import InvRow from "./InvRow";
+import Link from "next/link";
 
 export default function InventoryTable({
   products,
@@ -12,7 +13,7 @@ export default function InventoryTable({
   searchWord,
   setSearchWord,
   onRefresh,
-  onPlaceOrder,
+  scannerHref
 }) {
   const [refreshing, setRefreshing] = useState(false);
 
@@ -53,13 +54,12 @@ export default function InventoryTable({
         </div>
 
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <button
-            type="button"
-            onClick={onPlaceOrder}
-            className="rounded-xl bg-red-600 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow transition hover:bg-red-500"
-          >
-            + Place Order
-          </button>
+        <Link
+          href={scannerHref}
+          className="rounded-xl bg-red-600 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow transition hover:bg-red-500"
+        >
+          Barcode Center
+          </Link>
 
           <div className="relative">
             <input

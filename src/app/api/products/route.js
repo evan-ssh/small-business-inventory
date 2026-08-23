@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getDB } from '@/lib/mongodb';
 import { ObjectId } from "mongodb";
 import { getSessionUser } from "@/lib/session";
+import { getStoreMembership } from "@/lib/store";
 
 const collectionName = "products";
 
@@ -27,22 +28,14 @@ export async function GET(request) {
       );
     }
 
-    const db = await getDB();
-    const storeId = new ObjectId(storeIdValue);
+    const membership = await getStoreMembership(storeIdValue);
 
-    const membership = await db
-      .collection("storeMembers")
-      .findOne({
-        userId: sessionUser.userId,
-        storeId,
-      });
+      if (!membership) {
+       return NextResponse.json({ error: "You cannot access this store" },{ status: 403 });
+      }
 
-    if (!membership) {
-      return NextResponse.json(
-        { error: "You cannot access this store" },
-        { status: 403 }
-      );
-    }
+const db = await getDB();
+const storeId = new ObjectId(storeIdValue);
 
     const products = await db
       .collection(collectionName)
@@ -53,7 +46,6 @@ export async function GET(request) {
       `Loaded ${products.length} products for store ${storeIdValue}`
     );
 
-    // Explicit mapping avoids returning unexpected MongoDB/BSON values.
     const normalizedProducts = products.map((product) => ({
       _id: product._id.toString(),
       description: product.description ?? "",
@@ -66,6 +58,7 @@ export async function GET(request) {
       transactionsThisMonth: Number(
         product.transactionsThisMonth ?? 0
       ),
+      barcode: product.barcode ?? "",
       storeId: product.storeId?.toString() ?? storeIdValue,
       ownerId: product.ownerId?.toString() ?? "",
     }));
@@ -83,74 +76,3 @@ export async function GET(request) {
     );
   }
 }
-
-
-
-
-
-
-
-
-  export async function POST(request){
-    
-  try{
-    const sessionUser = await getSessionUser();
-
-    if (!sessionUser) {
-      return NextResponse.json({ error: "Not signed in" });
-    }
-    const db = await getDB();
-    const product = await request.json();
-    if (!product.storeId || !ObjectId.isValid(product.storeId)) {
-      return NextResponse.json(
-        { error: "Valid storeId is required" },
-        { status: 400 }
-      );
-    }
-    
-    const storeId = new ObjectId(product.storeId);
-    const membership = await db.collection("storeMembers").findOne({
-      userId: sessionUser.userId,
-      storeId,
-    });
-
-    if (!membership) {
-      return NextResponse.json(
-        { error: "You cannot add products to this store" },
-        { status: 403 }
-      );
-    }
-
-    const qty = Number(product.qty ?? 0);
-      const threshold = Number(product.threshold ?? 10);
-      
-      // Calculate status dynamically
-      let status = "Optimal";
-      if (qty <= 0) {
-        status = "Out of Stock";
-      } else if (qty <= threshold) {
-        status = "Low Stock";
-      }
-    await db.collection(collectionName).insertOne({
-      description: product.description,
-      sku: product.sku,
-      type: product.type,
-      qty: Number(product.qty),
-      price: Number(product.price),
-      status,
-      threshold,
-      transactionsThisMonth: Number(product.transactionsThisMonth ?? 0),
-      storeId,
-      ownerId: sessionUser.userId
-    });
-    return NextResponse.json({message: "Product created"})
-      
-    
-  }catch(err){
-    console.log(err)
-    return NextResponse.json(
-      { error: "Failed to create product" },
-      { status: 500 }
-    );
-  }
-  }
