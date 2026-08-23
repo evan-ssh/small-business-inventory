@@ -1,6 +1,6 @@
 "use client";
 
-import { cache, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import StoresHeader from "@/components/Stores/StoresHeader";
 import StoreSummary from "@/components/Stores/StoreSummary";
@@ -26,32 +26,35 @@ export default function StoresPage() {
   const [error, setError] = useState("");
   const [showAddStoreMenu, setShowAddStoreMenu] = useState(false);
 
-  useEffect(() => {
-    async function loadStores() {
-      try {
-        setError("");
-
-        const response = await fetch("/api/stores", {cache:"no-store",});
-        const data = await response.json();
-
-        if (!response.ok) {
-          setError(data.error || "Failed to load stores");
-          return;
-        }
-
-        const normalizedStores = data.map((store, index) =>
-          normalizeStore(store, index)
-        );
-
-        setStores(normalizedStores);
-      } catch (error) {
-        console.error("Failed to load stores:", error);
-        setError("Failed to load stores");
-      } finally {
-        setLoading(false);
+  const loadStores = async () => {
+    try {
+      setError("");
+  
+      const response = await fetch("/api/stores", {
+        cache: "no-store",
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        setError(data.error || "Failed to load stores");
+        return;
       }
+  
+      const normalizedStores = data.map((store, index) =>
+        normalizeStore(store, index)
+      );
+  
+      setStores(normalizedStores);
+    } catch (error) {
+      console.error("Failed to load stores:", error);
+      setError("Failed to load stores");
+    } finally {
+      setLoading(false);
     }
-
+  };
+  
+  useEffect(() => {
     loadStores();
   }, []);
 
@@ -162,6 +165,7 @@ export default function StoresPage() {
                 <StoreCard
                   key={store._id}
                   store={store}
+                  onUpdate={loadStores}
                 />
               ))}
             </div>

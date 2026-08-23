@@ -1,4 +1,8 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
+import StoreOptionsMenu from "./StoreOptionsMenu";
 
 function StoreMetric({ label, value, isAlert = false }) {
   return (
@@ -18,7 +22,7 @@ function StoreMetric({ label, value, isAlert = false }) {
   );
 }
 
-export default function StoreCard({ store }) {
+export default function StoreCard({ store, onUpdate }) {
   const storeId = store._id || store.id;
 
   const products = Number(store.products ?? 0);
@@ -26,6 +30,8 @@ export default function StoreCard({ store }) {
   const lowStock = Number(store.lowStock ?? 0);
   const teamMembers = Number(store.teamMembers ?? 1);
   const inventoryValue = Number(store.inventoryValue ?? 0);
+
+  const [showOptions, setShowOptions] = useState(false);
 
   return (
     <article
@@ -121,26 +127,35 @@ export default function StoreCard({ store }) {
 
         {/* Actions */}
         <div className="mt-auto flex gap-3 pt-5">
-        <Link
-            href={`/dashboard/${store._id}`}
+          <Link
+            href={`/dashboard/${storeId}`}
             className={`flex-1 rounded-xl px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-wider transition ${
-                store.isActive
+              store.isActive
                 ? "bg-red-600 text-white hover:bg-red-500"
                 : "border border-white/10 bg-white/5 text-white hover:bg-white hover:text-slate-950"
             }`}
-            >
+          >
             Open Workspace
-            </Link>
+          </Link>
 
           <button
             type="button"
             aria-label={`Manage ${store.name}`}
+            onClick={() => setShowOptions(true)}
             className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 font-bold text-slate-300 transition hover:bg-white hover:text-slate-950"
           >
             •••
           </button>
         </div>
       </div>
+
+      {showOptions && (
+        <StoreOptionsMenu
+          store={store}
+          onClose={() => setShowOptions(false)}
+          onUpdate={onUpdate}
+        />
+      )}
     </article>
   );
 }

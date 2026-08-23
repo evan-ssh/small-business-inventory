@@ -1,74 +1,69 @@
-import { NextResponse } from "next/server";
+"use server";
+
 import { ObjectId } from "mongodb";
 import { getDB } from "@/lib/mongodb";
 import { getSessionUser } from "@/lib/session";
+import { getStoreMembership } from "@/lib/store";
 
-export async function PATCH(request, { params }) {
+export async function updateMemberPermissionsAction(
+  storeId,
+  memberId,
+  permissions
+) {
   try {
     const sessionUser = await getSessionUser();
 
     if (!sessionUser) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return {
+        success: false,
+        error: "Unauthorized",
+      };
     }
 
-    const { storeId, memberId } = await params;
-
     if (!storeId || !memberId) {
-      return NextResponse.json(
-        { error: "Store ID and member ID are required." },
-        { status: 400 }
-      );
+      return {
+        success: false,
+        error: "Store ID and member ID are required.",
+      };
     }
 
     let storeObjectId;
     let memberObjectId;
 
-    try {
-      storeObjectId = new ObjectId(storeId);
+    try {storeObjectId = new ObjectId(storeId);
     } catch {
-      return NextResponse.json(
-        { error: "Invalid store ID." },
-        { status: 400 }
-      );
+      return {success: false,error: "Invalid store ID.",};
     }
 
     try {
       memberObjectId = new ObjectId(memberId);
     } catch {
-      return NextResponse.json(
-        { error: "Invalid member ID." },
-        { status: 400 }
-      );
+      return {
+        success: false,
+        error: "Invalid member ID.",
+      };
     }
 
-    const body = await request.json();
     const db = await getDB();
 
-    const requesterMembership = await db
-      .collection("storeMembers")
-      .findOne({
-        userId: sessionUser.userId,
-        storeId: storeObjectId,
-      });
+    const requesterMembership =
+      await getStoreMembership(storeId);
 
     if (!requesterMembership) {
-      return NextResponse.json(
-        { error: "You do not have access to this store." },
-        { status: 403 }
-      );
+      return {
+        success: false,
+        error: "You do not have access to this store.",
+      };
     }
 
     if (
       requesterMembership.role !== "owner" &&
-      requesterMembership.role !== "manager"
+      requesterMembership.role !== "staff"
     ) {
-      return NextResponse.json(
-        { error: "You do not have permission to manage members." },
-        { status: 403 }
-      );
+      return {
+        success: false,
+        error: "You do not have permission to manage members.",
+      };
     }
 
     const membership = await db
@@ -79,26 +74,24 @@ export async function PATCH(request, { params }) {
       });
 
     if (!membership) {
-      return NextResponse.json(
-        { error: "Store member not found." },
-        { status: 404 }
-      );
+      return {
+        success: false,
+        error: "Store member not found.",
+      };
     }
 
     if (membership.role === "owner") {
-      return NextResponse.json(
-        { error: "Owner permissions cannot be changed." },
-        { status: 403 }
-      );
+      return {
+        success: false,
+        error: "Owner permissions cannot be changed.",
+      };
     }
 
-    const permissions = body.permissions;
-
     if (!permissions || typeof permissions !== "object") {
-      return NextResponse.json(
-        { error: "Valid permissions are required." },
-        { status: 400 }
-      );
+      return {
+        success: false,
+        error: "Valid permissions are required.",
+      };
     }
 
     const updatedPermissions = {
@@ -127,10 +120,10 @@ export async function PATCH(request, { params }) {
         _id: new ObjectId(membership.userId),
       });
     } catch {
-      // Leave user as null if userId is invalid
     }
 
-    return NextResponse.json({
+    return {
+      success: true,
       member: {
         _id: membership._id.toString(),
         userId: membership.userId,
@@ -140,13 +133,13 @@ export async function PATCH(request, { params }) {
         role: membership.role || "staff",
         permissions: updatedPermissions,
       },
-    });
+    };
   } catch (error) {
-    console.error("PATCH store member error:", error);
+    console.error("Update member permissions failed:", error);
 
-    return NextResponse.json(
-      { error: "Failed to update member permissions." },
-      { status: 500 }
-    );
+    return {
+      success: false,
+      error: "Failed to update member permissions.",
+    };
   }
 }
