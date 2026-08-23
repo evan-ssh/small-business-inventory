@@ -18,6 +18,7 @@ function getProductStatus(qty,threshold) {
   return "Optimal";
 }
 
+//Create
 export async function productAction(prevState, formData){
     try {
         const sessionUser = await getSessionUser();
@@ -87,3 +88,167 @@ export async function productAction(prevState, formData){
         success:false,error:"Failed to create new product"
     }
 }}
+
+  // UPDATE PRODUCT
+  export async function updateProductAction(formData) {
+    try {
+      const sessionUser = await getSessionUser();
+
+      if (!sessionUser) {
+        return {
+          success: false,
+          error: "You must be signed in to update a product.",
+        };
+      }
+
+      const productId = formData.get("id")?.toString();
+      const description = formData.get("description")?.toString().trim();
+      const sku = formData.get("sku")?.toString().trim() || "";
+      const type = formData.get("type")?.toString().trim() || "";
+      const qty = Number(formData.get("qty") ?? 0);
+      const threshold = Number(formData.get("threshold") ?? 10);
+      const price = Number(formData.get("price") ?? 0);
+
+      if (!productId || !ObjectId.isValid(productId)) {
+        return {
+          success: false,
+          error: "A valid product ID is required.",
+        };
+      }
+
+      if (!description) {
+        return {
+          success: false,
+          error: "Product description cannot be empty.",
+        };
+      }
+
+      const db = await getDB();
+
+      const product = await db.collection(collectionName).findOne({
+        _id: new ObjectId(productId),
+      });
+
+      if (!product) {
+        return {
+          success: false,
+          error: "Product not found.",
+        };
+      }
+
+      const membership = await getStoreMembership(
+        product.storeId.toString()
+      );
+
+      if (!membership) {
+        return {
+          success: false,
+          error: "You do not have access to this store.",
+        };
+      }
+
+      if (!hasStorePermission(membership, "update")) {
+        return {
+          success: false,
+          error: "You do not have permission to update products.",
+        };
+      }
+
+      await db.collection(collectionName).updateOne(
+        {
+          _id: new ObjectId(productId),
+        },
+        {
+          $set: {
+            description,
+            sku,
+            type,
+            qty,
+            threshold,
+            price,
+            status: getProductStatus(qty, threshold),
+          },
+        }
+      );
+
+      return {
+        success: true,
+        message: "Product updated successfully.",
+      };
+    } catch (error) {
+      console.error("Update product failed:", error);
+
+      return {
+        success: false,
+        error: "Failed to update product.",
+      };
+    }
+  }
+
+  // DELETE PRODUCT
+  export async function deleteProductAction(productId) {
+    try {
+      const sessionUser = await getSessionUser();
+
+      if (!sessionUser) {
+        return {
+          success: false,
+          error: "You must be signed in to delete a product.",
+        };
+      }
+
+      if (!productId || !ObjectId.isValid(productId)) {
+        return {
+          success: false,
+          error: "A valid product ID is required.",
+        };
+      }
+
+      const db = await getDB();
+
+      const product = await db.collection(collectionName).findOne({
+        _id: new ObjectId(productId),
+      });
+
+      if (!product) {
+        return {
+          success: false,
+          error: "Product not found.",
+        };
+      }
+
+      const membership = await getStoreMembership(
+        product.storeId.toString()
+      );
+
+      if (!membership) {
+        return {
+          success: false,
+          error: "You do not have access to this store.",
+        };
+      }
+
+      if (!hasStorePermission(membership, "delete")) {
+        return {
+          success: false,
+          error: "You do not have permission to delete products.",
+        };
+      }
+
+      await db.collection(collectionName).deleteOne({
+        _id: new ObjectId(productId),
+      });
+
+      return {
+        success: true,
+        message: "Product deleted successfully.",
+      };
+    } catch (error) {
+      console.error("Delete product failed:", error);
+
+      return {
+        success: false,
+        error: "Failed to delete product.",
+      };
+    }
+  }
