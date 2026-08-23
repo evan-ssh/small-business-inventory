@@ -2,6 +2,8 @@
 import { cookies } from 'next/headers'
 import { jwtVerify } from "jose";
 
+// Helper for verifying the user's login session
+
 
 export async function getSessionUser() {
   const cookieStore = await cookies()

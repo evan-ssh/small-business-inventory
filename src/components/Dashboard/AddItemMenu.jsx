@@ -9,17 +9,6 @@ import {
 import AddItemFields from "./AddItemFields";
 import { productAction } from "@/app/actions/products";
 
-function getStatusFromQty(qty) {
-  if (qty <= 0) {
-    return "Depleted";
-  }
-
-  if (qty < 20) {
-    return "Low Stock";
-  }
-
-  return "Optimal";
-}
 
 export default function AddItemMenu({
   storeId,
@@ -41,9 +30,6 @@ export default function AddItemMenu({
       error: "",
     });
 
-  const qtyNumber = Number(formData.qty || 0);
-  const calculatedStatus =
-    getStatusFromQty(qtyNumber);
 
   useEffect(() => {
     if (actionState.success) {
@@ -67,7 +53,6 @@ export default function AddItemMenu({
       <div className="my-8 flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-white/10 bg-slate-950/95 shadow-2xl shadow-black/40">
         <form action={formAction} className="flex min-h-0 flex-col">
           
-          {/* Sends the selected workspace to productAction */}
           <input
             type="hidden"
             name="storeId" 
@@ -88,7 +73,6 @@ export default function AddItemMenu({
           <div className="flex-1 overflow-y-auto">
           <AddItemFields
             currFormValues={formData}
-            calculatedStatus={calculatedStatus}
             onChange={handleChange}
           />
           

@@ -1,5 +1,8 @@
 import {MongoClient, ServerApiVersion} from "mongodb";
 
+// Helper for connecting to the MongoDB database
+
+
 const uri = process.env.MONGODB_URI;
 const dbName = process.env.MONGODB_DB 
 

@@ -23,7 +23,6 @@ function AddField({ label, name, value, type = "text", required = false, readOnl
 
 export default function AddItemFields({
   currFormValues,
-  calculatedStatus,
   onChange,
 }) {
   return (
@@ -31,7 +30,6 @@ export default function AddItemFields({
       <AddField label="Description"
         name="description"
         value={currFormValues.description}
-        required={true}
         onChange={onChange}
       />
 

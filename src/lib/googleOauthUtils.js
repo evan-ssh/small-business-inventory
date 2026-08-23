@@ -1,6 +1,8 @@
 import {google} from 'googleapis';
 import {getDB} from '@/lib/mongodb';
 
+// Helper functions for Google OAuth authentication and user information
+
 const oauthclient = new google.auth.OAuth2(
     process.env.GOOGLE_CLIENT_ID,
     process.env.GOOGLE_SECRET,

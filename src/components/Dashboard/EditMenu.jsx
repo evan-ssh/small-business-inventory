@@ -3,18 +3,8 @@
 import { useEffect, useState } from "react";
 import EditMenuFields from "./EditMenuFields";
 import DeletePopup from "./DeletePopup";
+import {updateProductAction,deleteProductAction} from "@/app/actions/products";
 
-function getProductStatus(qty, threshold) {
-  if (qty <= 0) {
-    return "Depleted";
-  }
-
-  if (qty < threshold) {
-    return "Low Stock";
-  }
-
-  return "Optimal";
-}
 
 export default function EditMenu({ product, onClose,onUpdate }) {
   const [errMsg, setErr] = useState("");  
@@ -70,70 +60,66 @@ export default function EditMenu({ product, onClose,onUpdate }) {
   
     async function handleSave(e) {
       e.preventDefault();
+    
       const description = formData.description.trim();
       const sku = formData.sku.trim();
-
-      if (!description) {setErr("Product description cannot be empty.");return;}
-      if (!sku) {setErr("SKU code cannot be empty."); return;}
-
-      const updatedProduct = {
-        description: formData.description.trim(),
-        sku: formData.sku.trim(),
-        type: formData.type.trim(),
-        qty: Number(formData.qty ?? 0),
-        threshold: Number(formData.threshold ?? 10),
-        price: Number(formData.price ?? 0),
-        status: getProductStatus(Number(formData.qty ?? 0), Number(formData.threshold ?? 10)),
-      };
-      try{
-        const response = await fetch(`/api/products/${product._id}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(updatedProduct),
-          
-        });
-
-        if (!response.ok) {
-          const data = await response.json();
-          setErr(data.error || "You do not have permission to update this product.");
-          return;
-          
-        }
-       
-        await onUpdate();
-        onClose();
-
     
-      }catch(err){
-        console.log(err)
+      if (!description) {
+        setErr("Product description cannot be empty.");
+        return;
       }
+    
+      if (!sku) {
+        setErr("SKU code cannot be empty.");
+        return;
+      }
+    
+      const actionFormData = new FormData();
+    
+      actionFormData.append("id", product._id);
+      actionFormData.append("description", description);
+      actionFormData.append("sku", sku);
+      actionFormData.append("type", formData.type.trim());
+      actionFormData.append("qty", String(Number(formData.qty ?? 0)));
+      actionFormData.append(
+        "threshold",
+        String(Number(formData.threshold ?? 10))
+      );
+      actionFormData.append(
+        "price",
+        String(Number(formData.price ?? 0))
+      );
+    
+      setErr("");
+    
+      const result = await updateProductAction(actionFormData);
+    
+      if (!result.success) {
+        setErr(result.error || "Failed to update product.");
+        return;
+      }
+    
+      await onUpdate();
+      onClose();
     }
-
   
-async function handleDeleteConfirm(productToDelete) {
-  try{
-    const response = await fetch(`/api/products/${productToDelete._id}`,{
-    method:"DELETE",
-  });
-
-
-  if(!response.ok){
-    const data = await response.json();
+    async function handleDeleteConfirm(productToDelete) {
+      const result = await deleteProductAction(productToDelete._id);
+    
+      if (!result.success) {
+        return {
+          success: false,
+          error: result.error || "Failed to delete product.",
+        };
+      }
+    
+      await onUpdate();
+      onClose();
+    
       return {
-        success: false,
-        error: data.error || "Failed to delete product check permissions.",
-  }
-}
-
-  await onUpdate();
-  onClose();
-
-  return{success:true}
-  }catch(err){
-    console.log(err);
-    return {success:false,error:"Failed to delete product check response"}
+        success: true,
+      };
     }
-  }
   
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 px-4 py-8 backdrop-blur-sm">
