@@ -1,10 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  deleteStoreAction,
-  updateStoreAction,
-} from "@/app/actions/stores";
+import {deleteStoreAction,updateStoreAction} from "@/app/actions/store";
 
 export default function StoreOptionsMenu({
   store,
