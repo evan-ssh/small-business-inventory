@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { addMemberAction } from "@/app/actions/members";
 
 export default function AddMemberPanel({
   storeId,
@@ -18,30 +19,27 @@ export default function AddMemberPanel({
     setError("");
 
     try {
-      const res = await fetch(`/api/stores/${storeId}/members`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          role,
-        }),
-      });
+      const result = await addMemberAction(
+        storeId,
+        email,
+        role
+      );
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Failed to add member.");
+      if (!result.success) {
+        throw new Error(
+          result.error || "Failed to add member."
+        );
       }
 
       if (onMemberAdded) {
-        onMemberAdded(data.member);
+        onMemberAdded(result.member);
       }
 
       onClose();
     } catch (err) {
-      setError(err.message || "Failed to add member.");
+      setError(
+        err.message || "Failed to add member."
+      );
     } finally {
       setLoading(false);
     }
@@ -77,7 +75,10 @@ export default function AddMemberPanel({
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="mt-4 space-y-4">
+        <form
+          onSubmit={handleSubmit}
+          className="mt-4 space-y-4"
+        >
           <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition hover:border-red-400/30">
             <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-slate-400">
               User Email

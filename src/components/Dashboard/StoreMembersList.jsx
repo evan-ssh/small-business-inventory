@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { updateMemberPermissionsAction } from "@/app/actions/members";
 
 export default function StoreMembersList({ storeId }) {
   const [members, setMembers] = useState([]);
@@ -13,17 +14,24 @@ export default function StoreMembersList({ storeId }) {
       setLoading(true);
       setError("");
 
-      const response = await fetch(`/api/stores/${storeId}/members`);
+      const response = await fetch(
+        `/api/stores/${storeId}/members`
+      );
+
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to load members.");
+        throw new Error(
+          data.error || "Failed to load members."
+        );
       }
 
       setMembers(data.members || []);
     } catch (err) {
       console.error("Failed to fetch members:", err);
-      setError(err.message || "Failed to load members.");
+      setError(
+        err.message || "Failed to load members."
+      );
     } finally {
       setLoading(false);
     }
@@ -35,7 +43,11 @@ export default function StoreMembersList({ storeId }) {
     }
   }, [storeId]);
 
-  const updatePermission = (memberId, permission, value) => {
+  const updatePermission = (
+    memberId,
+    permission,
+    value
+  ) => {
     setMembers((prev) =>
       prev.map((member) => {
         if (member._id !== memberId) {
@@ -58,35 +70,37 @@ export default function StoreMembersList({ storeId }) {
       setSavingId(member._id);
       setError("");
 
-      const response = await fetch(
-        `/api/stores/${storeId}/members/${member._id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            permissions: member.permissions,
-          }),
-        }
-      );
+      const result =
+        await updateMemberPermissionsAction(
+          storeId,
+          member._id,
+          member.permissions
+        );
 
-      const data = await response.json();
-
-      if (!response.ok) {
+      if (!result.success) {
         throw new Error(
-          data.error || "Failed to update permissions."
+          result.error ||
+            "Failed to update permissions."
         );
       }
 
       setMembers((prev) =>
         prev.map((item) =>
-          item._id === member._id ? data.member : item
+          item._id === member._id
+            ? result.member
+            : item
         )
       );
     } catch (err) {
-      console.error("Failed to save permissions:", err);
-      setError(err.message || "Failed to update permissions.");
+      console.error(
+        "Failed to save permissions:",
+        err
+      );
+
+      setError(
+        err.message ||
+          "Failed to update permissions."
+      );
     } finally {
       setSavingId(null);
     }
@@ -114,7 +128,8 @@ export default function StoreMembersList({ storeId }) {
         </h2>
 
         <p className="mt-1 text-xs text-slate-400">
-          Control what each member can do within this workspace.
+          Control what each member can do within this
+          workspace.
         </p>
       </div>
 
@@ -133,14 +148,16 @@ export default function StoreMembersList({ storeId }) {
           </div>
         ) : (
           members.map((member) => {
-            const permissions = member.permissions || {
-              view: true,
-              create: false,
-              update: false,
-              delete: false,
-            };
+            const permissions =
+              member.permissions || {
+                view: true,
+                create: false,
+                update: false,
+                delete: false,
+              };
 
-            const isOwner = member.role === "owner";
+            const isOwner =
+              member.role === "owner";
 
             return (
               <div
@@ -152,19 +169,23 @@ export default function StoreMembersList({ storeId }) {
                     {member.picture ? (
                       <img
                         src={member.picture}
-                        alt={member.name || "Member"}
+                        alt={
+                          member.name || "Member"
+                        }
                         className="h-10 w-10 rounded-full object-cover"
                       />
                     ) : (
                       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-sm font-bold text-white">
-                        {member.name?.charAt(0) || "U"}
+                        {member.name?.charAt(0) ||
+                          "U"}
                       </div>
                     )}
 
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
                         <p className="truncate text-sm font-semibold text-white">
-                          {member.name || "Unknown User"}
+                          {member.name ||
+                            "Unknown User"}
                         </p>
 
                         {isOwner && (
@@ -175,7 +196,8 @@ export default function StoreMembersList({ storeId }) {
                       </div>
 
                       <p className="truncate text-xs text-slate-400">
-                        {member.email || "No email"}
+                        {member.email ||
+                          "No email"}
                       </p>
                     </div>
                   </div>
@@ -196,49 +218,63 @@ export default function StoreMembersList({ storeId }) {
                       ["create", "Create"],
                       ["update", "Update"],
                       ["delete", "Delete"],
-                    ].map(([permission, label]) => (
-                      <label
-                        key={permission}
-                        className={`flex items-center gap-2 rounded-xl border px-3 py-2.5 transition ${
-                          permissions[permission]
-                            ? "border-red-500/30 bg-red-500/10"
-                            : "border-white/10 bg-white/[0.02]"
-                        } ${
-                          isOwner
-                            ? "cursor-not-allowed opacity-60"
-                            : "cursor-pointer hover:border-white/20"
-                        }`}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={!!permissions[permission]}
-                          disabled={isOwner}
-                          onChange={(e) =>
-                            updatePermission(
-                              member._id,
-                              permission,
-                              e.target.checked
-                            )
-                          }
-                          className="h-4 w-4 accent-red-600"
-                        />
+                    ].map(
+                      ([permission, label]) => (
+                        <label
+                          key={permission}
+                          className={`flex items-center gap-2 rounded-xl border px-3 py-2.5 transition ${
+                            permissions[
+                              permission
+                            ]
+                              ? "border-red-500/30 bg-red-500/10"
+                              : "border-white/10 bg-white/[0.02]"
+                          } ${
+                            isOwner
+                              ? "cursor-not-allowed opacity-60"
+                              : "cursor-pointer hover:border-white/20"
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={Boolean(
+                              permissions[
+                                permission
+                              ]
+                            )}
+                            disabled={isOwner}
+                            onChange={(e) =>
+                              updatePermission(
+                                member._id,
+                                permission,
+                                e.target.checked
+                              )
+                            }
+                            className="h-4 w-4 accent-red-600"
+                          />
 
-                        <span className="text-xs font-medium text-white">
-                          {label}
-                        </span>
-                      </label>
-                    ))}
+                          <span className="text-xs font-medium text-white">
+                            {label}
+                          </span>
+                        </label>
+                      )
+                    )}
                   </div>
 
                   {!isOwner && (
                     <div className="mt-4 flex justify-end">
                       <button
                         type="button"
-                        onClick={() => savePermissions(member)}
-                        disabled={savingId === member._id}
+                        onClick={() =>
+                          savePermissions(member)
+                        }
+                        disabled={
+                          savingId ===
+                          member._id
+                        }
                         className="rounded-xl bg-red-600 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-50"
                       >
-                        {savingId === member._id
+                        {savingId ===
+                        member._id
                           ? "Saving..."
                           : "Save Permissions"}
                       </button>
@@ -253,3 +289,4 @@ export default function StoreMembersList({ storeId }) {
     </div>
   );
 }
+
