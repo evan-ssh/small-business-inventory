@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { createStoreAction } from "@/app/actions/store";
 
 export default function AddStoreMenu({
   onClose,
@@ -22,6 +23,8 @@ export default function AddStoreMenu({
       ...current,
       [name]: value,
     }));
+
+    setError("");
   }
 
   async function handleSubmit(event) {
@@ -36,26 +39,35 @@ export default function AddStoreMenu({
       setIsSaving(true);
       setError("");
 
-      const response = await fetch("/api/stores", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: formData.name.trim(),
-          location: formData.location.trim(),
-          type: formData.type,
-        }),
-      });
+      const actionFormData = new FormData();
 
-      const data = await response.json();
+      actionFormData.append(
+        "name",
+        formData.name.trim()
+      );
 
-      if (!response.ok) {
-        setError(data.error || "Failed to create store");
+      actionFormData.append(
+        "location",
+        formData.location.trim()
+      );
+
+      actionFormData.append(
+        "type",
+        formData.type
+      );
+
+      const result = await createStoreAction(
+        actionFormData
+      );
+
+      if (!result.success) {
+        setError(
+          result.error || "Failed to create store"
+        );
         return;
       }
 
-      onStoreCreated(data);
+      onStoreCreated(result.store);
       onClose();
     } catch (error) {
       console.error("Create store error:", error);
