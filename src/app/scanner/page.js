@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import BarcodeCenter from "@/components/Scanner/BarcodeCenter";
+import BarcodeCenter from "@/components/scanner/BarcodeCenter";
 
 export default function ScannerPage() {
   return (
