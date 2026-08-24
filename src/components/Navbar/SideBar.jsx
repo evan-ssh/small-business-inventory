@@ -1,15 +1,28 @@
 "use client";
 
-export default function AccountSidebar({ user, selectedInventory, onClose }) {
-  if (!user) return null;
-  const menuItems = [
-    "Products / Assets",
-    "Low Stock Review",
-    "AI Inventory Insights",
-    "Reports",
-    "Team Access",
-  ];
+import Link from "next/link";
 
+export default function AccountSidebar({
+  user,
+  selectedInventory,
+  onClose,
+}) {
+  if (!user) return null;
+
+  const menuItems = [
+    {
+      label: "Home",
+      href: "/",
+    },
+    {
+      label: "Stores",
+      href: "/stores",
+    },
+    {
+      label: "Dashboard",
+      href: "/dashboard",
+    },
+  ];
 
   return (
     <div className="fixed inset-0 z-[60]">
@@ -27,15 +40,12 @@ export default function AccountSidebar({ user, selectedInventory, onClose }) {
         {/* Header */}
         <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
           <div className="flex items-center gap-3">
-            
-
             <div>
               <h2 className="text-lg font-bold text-white">
                 Menu
               </h2>
-              <p className="text-xs text-slate-400">
-               
-              </p>
+
+              <p className="text-xs text-slate-400"></p>
             </div>
           </div>
 
@@ -53,13 +63,14 @@ export default function AccountSidebar({ user, selectedInventory, onClose }) {
         <div className="flex-1 overflow-y-auto px-6 py-5">
           <div className="flex flex-col gap-2">
             {menuItems.map((item) => (
-              <button
-                key={item}
-                type="button"
+              <Link
+                key={item.label}
+                href={item.href}
+                onClick={onClose}
                 className="rounded-2xl px-4 py-3 text-left text-sm font-medium text-slate-300 transition hover:bg-white/10 hover:text-white"
               >
-                {item}
-              </button>
+                {item.label}
+              </Link>
             ))}
           </div>
         </div>
