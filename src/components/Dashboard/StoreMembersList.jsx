@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -122,35 +121,35 @@ export default function StoreMembersList({
 
   return (
     <div className="fixed inset-0 z-50 flex h-[100dvh] w-full items-center justify-center overflow-hidden bg-slate-950/80 p-3 backdrop-blur-sm sm:p-6">
-      <div className="flex h-full max-h-[100dvh] w-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-slate-950 shadow-2xl sm:h-auto sm:max-h-[90dvh] sm:max-w-4xl">
+      <div className="relative flex h-full max-h-[100dvh] w-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-slate-950 shadow-2xl sm:h-auto sm:max-h-[90dvh] sm:max-w-4xl">
+
+        {/* Close Button */}
+        {onClose && (
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close permissions"
+            className="absolute right-4 top-4 z-50 flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-slate-900 text-lg font-medium text-slate-300 shadow-lg transition hover:bg-white hover:text-slate-950 active:scale-95 sm:right-5 sm:top-5"
+          >
+            ✕
+          </button>
+        )}
+
         {/* Header */}
-        <div className="shrink-0 border-b border-white/10 p-4 sm:p-6">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                Store Access
-              </p>
+        <div className="shrink-0 border-b border-white/10 p-4 pr-16 sm:p-6 sm:pr-20">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              Store Access
+            </p>
 
-              <h2 className="mt-1 text-xl font-bold text-white">
-                Manage Permissions
-              </h2>
+            <h2 className="mt-1 text-xl font-bold text-white">
+              Manage Permissions
+            </h2>
 
-              <p className="mt-1 text-xs text-slate-400">
-                Control what each member can do within this
-                workspace.
-              </p>
-            </div>
-
-            {onClose && (
-              <button
-                type="button"
-                onClick={onClose}
-                aria-label="Close permissions"
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/5 text-slate-400 transition hover:bg-white/10 hover:text-white"
-              >
-                ✕
-              </button>
-            )}
+            <p className="mt-1 text-xs text-slate-400">
+              Control what each member can do within this
+              workspace.
+            </p>
           </div>
         </div>
 
