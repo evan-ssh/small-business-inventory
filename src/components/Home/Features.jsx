@@ -290,7 +290,7 @@ export default function Features() {
 
             <p className="mt-3 leading-7 text-slate-400">
               Create separate store workspaces, invite members, and control
-              what each person can do with view, create, update, and delete
+              what each person can do with create, update, and delete
               permissions. Owners can manage access directly from the
               workspace.
             </p>
@@ -313,56 +313,6 @@ export default function Features() {
               <span className="text-[10px] font-medium text-slate-500">
                 Controlled workspace access
               </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Summary */}
-        <div className="mt-20 overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] shadow-2xl shadow-black/20 backdrop-blur-md">
-          <div className="grid md:grid-cols-3">
-            <div className="border-b border-white/10 p-7 md:border-b-0 md:border-r">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-red-400">
-                01
-              </p>
-
-              <h3 className="mt-3 text-lg font-bold text-white">
-                Manage
-              </h3>
-
-              <p className="mt-2 text-sm leading-6 text-slate-500">
-                Keep products, quantities, prices, SKUs, stock status, and
-                inventory value organized in one workspace.
-              </p>
-            </div>
-
-            <div className="border-b border-white/10 p-7 md:border-b-0 md:border-r">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-red-400">
-                02
-              </p>
-
-              <h3 className="mt-3 text-lg font-bold text-white">
-                Track
-              </h3>
-
-              <p className="mt-2 text-sm leading-6 text-slate-500">
-                Scan products, monitor stock levels, and keep inventory
-                activity up to date as your store changes.
-              </p>
-            </div>
-
-            <div className="p-7">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-red-400">
-                03
-              </p>
-
-              <h3 className="mt-3 text-lg font-bold text-white">
-                Decide
-              </h3>
-
-              <p className="mt-2 text-sm leading-6 text-slate-500">
-                Use dashboard insights and AI-powered restock and product
-                recommendations to make better inventory decisions.
-              </p>
             </div>
           </div>
         </div>
