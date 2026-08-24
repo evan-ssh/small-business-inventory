@@ -78,21 +78,21 @@ export default function StoreMembersList({
       setSavingId(member._id);
       setError("");
       setSuccess("");
-
+  
       const result =
         await updateMemberPermissionsAction(
           storeId,
           member._id,
           member.permissions
         );
-
+  
       if (!result.success) {
         throw new Error(
           result.error ||
             "Failed to update permissions."
         );
       }
-
+  
       setMembers((prev) =>
         prev.map((item) =>
           item._id === member._id
@@ -100,16 +100,21 @@ export default function StoreMembersList({
             : item
         )
       );
-
+  
       setSuccess(
         `${member.name || "Member"} permissions saved successfully.`
       );
+  
+  
+      if (onClose) {
+        onClose();
+      }
     } catch (err) {
       console.error(
         "Failed to save permissions:",
         err
       );
-
+  
       setError(
         err.message ||
           "Failed to update permissions."
@@ -153,7 +158,7 @@ export default function StoreMembersList({
           </div>
         </div>
 
-        {/* ONLY THIS SECTION SCROLLS */}
+    
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 sm:p-6">
           {loading ? (
             <div className="flex min-h-[200px] items-center justify-center">
