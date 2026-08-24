@@ -1,3 +1,4 @@
+
 import Image from "next/image";
 
 export default function Features() {
@@ -21,7 +22,6 @@ export default function Features() {
       <div className="pointer-events-none absolute right-0 top-1/3 h-72 w-72 rounded-full bg-white/5 blur-[100px]" />
 
       <div className="relative z-10 mx-auto max-w-7xl">
-
         {/* Header */}
         <div className="mx-auto max-w-3xl text-center">
           <span className="inline-flex rounded-full border border-red-500/20 bg-red-500/10 px-6 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-red-300 shadow-[0_0_40px_rgba(239,68,68,0.08)] backdrop-blur-md">
@@ -35,9 +35,9 @@ export default function Features() {
           </h2>
 
           <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-slate-400 sm:text-lg">
-            StockPilot brings inventory management, barcode scanning, team
-            access, transaction tracking, and AI-powered recommendations into
-            one simple workspace.
+            StockPilot combines inventory management, barcode scanning,
+            transaction tracking, team permissions, and AI-powered insights
+            into one connected workspace.
           </p>
         </div>
 
@@ -58,8 +58,7 @@ export default function Features() {
 
         {/* Feature grid */}
         <div className="mt-20 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-
-          {/* Inventory */}
+          {/* 1. Inventory Management */}
           <div className="group rounded-3xl border border-white/10 bg-white/[0.04] p-7 shadow-xl shadow-black/20 backdrop-blur-md transition duration-300 hover:-translate-y-1 hover:border-red-400/30 hover:bg-white/[0.07]">
             <div className="mb-6 flex items-center justify-between">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-red-500/10 text-xl shadow-lg shadow-red-500/10">
@@ -72,13 +71,14 @@ export default function Features() {
             </div>
 
             <h3 className="text-xl font-bold text-white">
-              Complete Inventory Control
+              Complete Inventory Management
             </h3>
 
             <p className="mt-3 leading-7 text-slate-400">
-              Create, edit, search, and manage products from one centralized
-              dashboard with quantities, prices, SKUs, categories, and stock
-              status.
+              Manage products from one centralized workspace with support for
+              SKUs, descriptions, categories, prices, quantities, stock
+              status, inventory value, and full product create, edit, and
+              delete operations.
             </p>
 
             <div className="mt-5 flex flex-wrap gap-2">
@@ -96,7 +96,7 @@ export default function Features() {
             </div>
           </div>
 
-          {/* Barcode Scanner */}
+          {/* 2. Barcode Scanner */}
           <div className="group relative overflow-hidden rounded-3xl border border-red-500/20 bg-gradient-to-br from-red-500/[0.10] to-white/[0.03] p-7 shadow-xl shadow-black/20 backdrop-blur-md transition duration-300 hover:-translate-y-1 hover:border-red-400/40">
             <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-red-500/10 blur-3xl" />
 
@@ -116,9 +116,10 @@ export default function Features() {
               </h3>
 
               <p className="mt-3 leading-7 text-slate-400">
-                Quickly identify inventory using your device camera and
-                barcode scanner, making it easier to find products without
-                manually searching through the inventory.
+                Use your device camera to scan product barcodes and quickly
+                locate inventory without manually searching through the
+                workspace. Scanning connects directly back to the inventory
+                workflow.
               </p>
 
               <div className="mt-5 flex items-center gap-3 rounded-xl border border-white/10 bg-black/20 p-4">
@@ -139,40 +140,7 @@ export default function Features() {
             </div>
           </div>
 
-          {/* Stock Monitoring */}
-          <div className="group rounded-3xl border border-white/10 bg-white/[0.04] p-7 shadow-xl shadow-black/20 backdrop-blur-md transition duration-300 hover:-translate-y-1 hover:border-red-400/30 hover:bg-white/[0.07]">
-            <div className="mb-6 flex items-center justify-between">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-red-500/10 text-xl shadow-lg shadow-red-500/10">
-                ⚠️
-              </div>
-
-              <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-600">
-                Monitoring
-              </span>
-            </div>
-
-            <h3 className="text-xl font-bold text-white">
-              Smart Stock Monitoring
-            </h3>
-
-            <p className="mt-3 leading-7 text-slate-400">
-              Quickly identify depleted and low-stock products so you can see
-              what needs attention before inventory becomes a problem.
-            </p>
-
-            <div className="mt-5 rounded-xl border border-red-500/10 bg-red-500/5 px-4 py-3">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-red-300">
-                Critical Shortages
-              </p>
-
-              <p className="mt-1 text-xs text-slate-500">
-                Important stock problems are highlighted directly on the
-                dashboard.
-              </p>
-            </div>
-          </div>
-
-          {/* Transactions */}
+          {/* 3. Stock & Transactions */}
           <div className="group rounded-3xl border border-white/10 bg-white/[0.04] p-7 shadow-xl shadow-black/20 backdrop-blur-md transition duration-300 hover:-translate-y-1 hover:border-red-400/30 hover:bg-white/[0.07]">
             <div className="mb-6 flex items-center justify-between">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-red-500/10 text-xl shadow-lg shadow-red-500/10">
@@ -185,27 +153,29 @@ export default function Features() {
             </div>
 
             <h3 className="text-xl font-bold text-white">
-              Inventory Transactions
+              Stock Monitoring & Transactions
             </h3>
 
             <p className="mt-3 leading-7 text-slate-400">
-              Keep track of inventory movement and monthly transaction
-              activity while keeping product quantities synchronized with
-              changes made in the workspace.
+              Track inventory movement and monthly activity while instantly
+              identifying low-stock and depleted products. Stock quantities,
+              transaction counts, and critical shortages stay visible from
+              the main dashboard.
             </p>
 
-            <div className="mt-5 flex items-center gap-3">
-              <div className="h-2 flex-1 rounded-full bg-white/5">
-                <div className="h-2 w-2/3 rounded-full bg-red-500/60" />
-              </div>
+            <div className="mt-5 rounded-xl border border-red-500/10 bg-red-500/5 px-4 py-3">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-red-300">
+                Critical Shortages
+              </p>
 
-              <span className="text-[10px] font-semibold text-slate-500">
-                Activity
-              </span>
+              <p className="mt-1 text-xs leading-5 text-slate-500">
+                Low Stock and Depleted items are surfaced directly where you
+                manage your inventory.
+              </p>
             </div>
           </div>
 
-          {/* Dashboard Metrics */}
+          {/* 4. Dashboard Metrics */}
           <div className="group rounded-3xl border border-white/10 bg-white/[0.04] p-7 shadow-xl shadow-black/20 backdrop-blur-md transition duration-300 hover:-translate-y-1 hover:border-red-400/30 hover:bg-white/[0.07]">
             <div className="mb-6 flex items-center justify-between">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-red-500/10 text-xl shadow-lg shadow-red-500/10">
@@ -218,17 +188,21 @@ export default function Features() {
             </div>
 
             <h3 className="text-xl font-bold text-white">
-              At-a-Glance Metrics
+              Store Overview
             </h3>
 
             <p className="mt-3 leading-7 text-slate-400">
-              See the most important information about your store without
-              digging through separate reports or pages.
+              Get the most important store information at a glance, including
+              active inventory units, critical shortages, monthly transaction
+              activity, and total inventory value without needing a separate
+              analytics page.
             </p>
 
             <div className="mt-5 grid grid-cols-3 gap-2">
               <div className="rounded-xl bg-white/5 p-2 text-center">
-                <p className="text-sm font-bold text-white">Units</p>
+                <p className="text-sm font-bold text-white">
+                  Units
+                </p>
                 <p className="text-[9px] text-slate-500">
                   Active
                 </p>
@@ -254,7 +228,7 @@ export default function Features() {
             </div>
           </div>
 
-          {/* AI */}
+          {/* 5. AI */}
           <div className="group relative overflow-hidden rounded-3xl border border-red-500/20 bg-gradient-to-br from-red-500/[0.10] to-white/[0.03] p-7 shadow-xl shadow-black/20 backdrop-blur-md transition duration-300 hover:-translate-y-1 hover:border-red-400/40">
             <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-red-500/10 blur-3xl" />
 
@@ -270,29 +244,35 @@ export default function Features() {
               </div>
 
               <h3 className="text-xl font-bold text-white">
-                Smart Restock Assistant
+                AI Inventory Assistant
               </h3>
 
               <p className="mt-3 leading-7 text-slate-400">
-                Let StockPilot analyze your inventory and recommend which
-                products may need attention based on stock levels and recent
-                transaction activity.
+                Use AI to analyze your actual inventory data and identify
+                products that may need to be reordered. StockPilot can also
+                suggest new products that could be worth adding based on the
+                information available in your inventory.
               </p>
 
-              <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
-                  Smart Analysis
-                </p>
+              <div className="mt-5 space-y-2 rounded-xl border border-white/10 bg-black/20 p-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-red-300">✓</span>
+                  <p className="text-xs text-slate-400">
+                    Restock recommendations
+                  </p>
+                </div>
 
-                <p className="mt-2 text-xs leading-5 text-slate-400">
-                  Recommendations are generated from your actual inventory
-                  data rather than a separate demo.
-                </p>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-red-300">✓</span>
+                  <p className="text-xs text-slate-400">
+                    New product suggestions
+                  </p>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Team Permissions */}
+          {/* 6. Team Access */}
           <div className="group rounded-3xl border border-white/10 bg-white/[0.04] p-7 shadow-xl shadow-black/20 backdrop-blur-md transition duration-300 hover:-translate-y-1 hover:border-red-400/30 hover:bg-white/[0.07]">
             <div className="mb-6 flex items-center justify-between">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-red-500/10 text-xl shadow-lg shadow-red-500/10">
@@ -305,13 +285,14 @@ export default function Features() {
             </div>
 
             <h3 className="text-xl font-bold text-white">
-              Team Access & Permissions
+              Multi-Store Team Access
             </h3>
 
             <p className="mt-3 leading-7 text-slate-400">
-              Invite members to your store workspace and control exactly what
-              they can do with inventory using view, create, update, and
-              delete permissions.
+              Create separate store workspaces, invite members, and control
+              what each person can do with view, create, update, and delete
+              permissions. Owners can manage access directly from the
+              workspace.
             </p>
 
             <div className="mt-5 flex items-center gap-2">
@@ -336,17 +317,16 @@ export default function Features() {
           </div>
         </div>
 
-        {/* Feature Summary */}
+        {/* Summary */}
         <div className="mt-20 overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] shadow-2xl shadow-black/20 backdrop-blur-md">
           <div className="grid md:grid-cols-3">
-
             <div className="border-b border-white/10 p-7 md:border-b-0 md:border-r">
               <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-red-400">
                 01
               </p>
 
               <h3 className="mt-3 text-lg font-bold text-white">
-                Know your inventory
+                Manage
               </h3>
 
               <p className="mt-2 text-sm leading-6 text-slate-500">
@@ -361,12 +341,12 @@ export default function Features() {
               </p>
 
               <h3 className="mt-3 text-lg font-bold text-white">
-                Move faster
+                Track
               </h3>
 
               <p className="mt-2 text-sm leading-6 text-slate-500">
-                Use barcode scanning, search, and inventory transactions to
-                quickly find products and keep stock information up to date.
+                Scan products, monitor stock levels, and keep inventory
+                activity up to date as your store changes.
               </p>
             </div>
 
@@ -376,19 +356,18 @@ export default function Features() {
               </p>
 
               <h3 className="mt-3 text-lg font-bold text-white">
-                Make smarter decisions
+                Decide
               </h3>
 
               <p className="mt-2 text-sm leading-6 text-slate-500">
-                Monitor stock activity and use StockPilot's AI assistant to
-                turn inventory data into practical restocking recommendations.
+                Use dashboard insights and AI-powered restock and product
+                recommendations to make better inventory decisions.
               </p>
             </div>
-
           </div>
         </div>
-
       </div>
     </section>
   );
 }
+
