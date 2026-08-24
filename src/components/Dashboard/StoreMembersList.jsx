@@ -8,11 +8,13 @@ export default function StoreMembersList({ storeId }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [savingId, setSavingId] = useState(null);
+  const [success, setSuccess] = useState("");
 
   const fetchMembers = async () => {
     try {
       setLoading(true);
       setError("");
+      setSuccess("");
 
       const response = await fetch(
         `/api/stores/${storeId}/members`
@@ -48,6 +50,9 @@ export default function StoreMembersList({ storeId }) {
     permission,
     value
   ) => {
+    setError("");
+    setSuccess("");
+
     setMembers((prev) =>
       prev.map((member) => {
         if (member._id !== memberId) {
@@ -69,6 +74,7 @@ export default function StoreMembersList({ storeId }) {
     try {
       setSavingId(member._id);
       setError("");
+      setSuccess("");
 
       const result =
         await updateMemberPermissionsAction(
@@ -90,6 +96,10 @@ export default function StoreMembersList({ storeId }) {
             ? result.member
             : item
         )
+      );
+
+      setSuccess(
+        `${member.name || "Member"} permissions saved successfully.`
       );
     } catch (err) {
       console.error(
@@ -136,6 +146,12 @@ export default function StoreMembersList({ storeId }) {
       {error && (
         <div className="mb-5 rounded-xl border border-red-500/20 bg-red-500/10 p-3 text-xs font-medium text-red-400">
           {error}
+        </div>
+      )}
+
+      {success && (
+        <div className="mb-5 rounded-xl border border-green-500/20 bg-green-500/10 p-3 text-xs font-medium text-green-300">
+          {success}
         </div>
       )}
 
@@ -289,4 +305,3 @@ export default function StoreMembersList({ storeId }) {
     </div>
   );
 }
-
