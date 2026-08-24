@@ -4,7 +4,6 @@ import Link from "next/link";
 
 export default function AccountSidebar({
   user,
-  selectedInventory,
   onClose,
 }) {
   if (!user) return null;
@@ -18,10 +17,7 @@ export default function AccountSidebar({
       label: "Stores",
       href: "/stores",
     },
-    {
-      label: "Dashboard",
-      href: "/dashboard",
-    },
+    
   ];
 
   return (
